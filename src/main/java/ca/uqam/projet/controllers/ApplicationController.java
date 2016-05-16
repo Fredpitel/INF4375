@@ -1,14 +1,10 @@
 package ca.uqam.projet.controllers;
 
-import java.util.*;
-
-import ca.uqam.projet.repositories.*;
-import ca.uqam.projet.resources.*;
-
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.*;
-import org.springframework.ui.*;
-import org.springframework.web.bind.annotation.*;
+import ca.uqam.projet.repositories.CitationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class ApplicationController {
@@ -20,4 +16,11 @@ public class ApplicationController {
     model.addAttribute("citations", repository.findAll());
     return "index";
   }
+
+
+
+
+
+
+
 }
