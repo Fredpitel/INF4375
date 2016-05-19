@@ -10,6 +10,6 @@ public class test {
     public static void main(String args[]){
         RestTemplate restTemplate=new RestTemplate();
         StationsSchema stations=restTemplate.getForObject("https://secure.bixi.com/data/stations.json", StationsSchema.class);
-        System.out.println(stations.toString());
+        System.out.println(stations.getStations().get(8).toString());
     }
 }
