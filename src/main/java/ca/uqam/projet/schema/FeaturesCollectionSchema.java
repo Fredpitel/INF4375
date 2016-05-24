@@ -11,6 +11,9 @@ public class FeaturesCollectionSchema {
     private FoodTruckCoordSchema geometry;
     private FoodTruckPropertiesSchema properties;
 
+    public FeaturesCollectionSchema(){
+    }
+
     public String getType() {
         return type;
     }

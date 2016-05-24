@@ -10,6 +10,9 @@ public class FoodTruckCoordSchema {
     private String type;
     private double[] coordinates;
 
+    public FoodTruckCoordSchema(){
+    }
+
     public double[] getCoordinates() {
         return coordinates;
     }
