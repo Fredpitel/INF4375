@@ -12,7 +12,12 @@ public class CuisineDeRueSchema {
     private String type;
     private ArrayList<FeaturesCollectionSchema> features;
 
-    public CuisineDeRueSchema() {
+    public  CuisineDeRueSchema(){
+    }
+
+    public CuisineDeRueSchema(String type, ArrayList<FeaturesCollectionSchema> features) {
+        this.type = type;
+        this.features = features;
     }
 
     public String getType() {

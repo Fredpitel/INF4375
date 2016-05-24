@@ -15,7 +15,6 @@ public class StationsSchema {
     private long timestamp;
 
     public StationsSchema(){
-
     }
 
     public ArrayList<BixiSchema> getStations(){

@@ -8,8 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FoodTruckPropertiesSchema {
-    private String name;
-    private String description;
     @JsonProperty("Date")
     private String date;
     @JsonProperty("Heure_debut")
@@ -20,27 +18,6 @@ public class FoodTruckPropertiesSchema {
     private String lieu;
     @JsonProperty("Camion")
     private String camion;
-    @JsonProperty("Truckid")
-    private String truckid;
-
-    public FoodTruckPropertiesSchema(){
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public String getDate() {
         return date;
@@ -80,14 +57,6 @@ public class FoodTruckPropertiesSchema {
 
     public void setCamion(String Camion) {
         camion = Camion;
-    }
-
-    public String getTruckid() {
-        return truckid;
-    }
-
-    public void setTruckid(String Truckid) {
-        truckid = Truckid;
     }
 
     @Override
