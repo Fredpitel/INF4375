@@ -1,11 +1,7 @@
 
 package ca.uqam.projet;
 
-import ca.uqam.projet.schema.CuisineDeRueSchema;
-import ca.uqam.projet.schema.StationsSchema;
-import ca.uqam.projet.tasks.FetchFoodtrucksTask;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * Created by deasel on 2016-05-19.
@@ -13,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class test {
-
+/*
     public static void main(String args[]){
 
         RestTemplate restTemplate=new RestTemplate();
@@ -29,5 +25,5 @@ public class test {
         FetchFoodtrucksTask fetch = new FetchFoodtrucksTask();
         fetch.execute();
 
-    }
+    }*/
 }
