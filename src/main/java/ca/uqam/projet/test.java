@@ -1,14 +1,9 @@
 
 package ca.uqam.projet;
 
-import ca.uqam.projet.repositories.FoodtruckRepository;
-
-import ca.uqam.projet.tasks.FetchFoodtrucksTask;
-import org.slf4j.*;
 import ca.uqam.projet.schema.CuisineDeRueSchema;
 import ca.uqam.projet.schema.StationsSchema;
-import org.apache.log4j.spi.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import ca.uqam.projet.tasks.FetchFoodtrucksTask;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,6 +15,18 @@ import org.springframework.web.client.RestTemplate;
 public class test {
 
     public static void main(String args[]){
+
+
+        RestTemplate restTemplate=new RestTemplate();
+        StationsSchema stations=restTemplate.getForObject("https://secure.bixi.com/data/stations.json", StationsSchema.class);
+        System.out.println(stations.getStations().get(8).toString());
+
+
+        restTemplate=new RestTemplate();
+        CuisineDeRueSchema foodtruck=restTemplate.getForObject("http://camionderue.com/donneesouvertes/geojson",CuisineDeRueSchema.class);
+
+        System.out.println(foodtruck);
+
         FetchFoodtrucksTask fetch = new FetchFoodtrucksTask();
         fetch.execute();
 
