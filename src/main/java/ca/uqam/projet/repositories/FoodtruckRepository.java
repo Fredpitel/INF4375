@@ -6,9 +6,7 @@ import java.sql.*;
 import ca.uqam.projet.schema.*;
 
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.dao.*;
 import org.springframework.jdbc.core.*;
-import org.springframework.jdbc.support.*;
 import org.springframework.stereotype.*;
 
 import java.lang.Object.*;
