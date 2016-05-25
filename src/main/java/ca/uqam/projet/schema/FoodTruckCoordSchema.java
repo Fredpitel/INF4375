@@ -31,6 +31,6 @@ public class FoodTruckCoordSchema {
 
     @Override
     public String toString() {
-        return ""+coordinates[0]+":"+coordinates[1];
+        return ""+coordinates[0]+" "+coordinates[1];
     }
 }

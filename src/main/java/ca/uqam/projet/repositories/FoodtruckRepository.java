@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.support.*;
 import org.springframework.stereotype.*;
 
+import java.lang.Object.*;
+
 @Component
 public class FoodtruckRepository {
 
@@ -27,8 +29,8 @@ public class FoodtruckRepository {
     }
 
     private static final String INSERT_STMT =
-            " insert into foodtruck (camion, lieu, heure_debut, heure_fin, jour)"
-                    + " values (?, ?, ?, ?, ?)"
+            " insert into foodtruck (camion, lieu, heure_debut, heure_fin, jour, coord)"
+                    + " values (?, ?, ?, ?, ?, ST_GeomFromText(?, 4326))"
                     + " on conflict do nothing"
             ;
 
@@ -42,6 +44,7 @@ public class FoodtruckRepository {
             ps.setString(3, propreties.getHeure_debut());
             ps.setString(4, propreties.getHeure_fin());
             ps.setString(5, propreties.getDate());
+            ps.setString(6, "POINT(" + foodtruck.getGeometry() + ")");
             return ps;
         });
     }
