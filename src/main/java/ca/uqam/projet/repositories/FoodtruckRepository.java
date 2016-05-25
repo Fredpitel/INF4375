@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.*;
 
-import java.lang.Object.*;
-
 @Component
 public class FoodtruckRepository {
 

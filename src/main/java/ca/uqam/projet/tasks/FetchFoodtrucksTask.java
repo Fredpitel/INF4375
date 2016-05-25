@@ -1,16 +1,8 @@
 package ca.uqam.projet.tasks;
 
 import ca.uqam.projet.schema.*;
-
-import java.util.*;
-
 import ca.uqam.projet.repositories.*;
-
-import java.util.stream.*;
-
-import com.fasterxml.jackson.annotation.*;
 import org.slf4j.*;
-
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 import org.springframework.scheduling.annotation.*;
@@ -24,7 +16,7 @@ public class FetchFoodtrucksTask {
 
     @Autowired private FoodtruckRepository repository;
 
-    @Scheduled(cron="*/10 * * * * ?")
+    @Scheduled(cron="0 0 0,12 * * ?")
     public void execute() {
 
         RestTemplate restTemplate = new RestTemplate();
