@@ -9,23 +9,13 @@ import java.util.ArrayList;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CuisineDeRueSchema {
-    private String type;
     private ArrayList<FeaturesCollectionSchema> features;
 
     public  CuisineDeRueSchema(){
     }
 
-    public CuisineDeRueSchema(String type, ArrayList<FeaturesCollectionSchema> features) {
-        this.type = type;
+    public CuisineDeRueSchema(ArrayList<FeaturesCollectionSchema> features) {
         this.features = features;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public ArrayList<FeaturesCollectionSchema> getFeatures() {

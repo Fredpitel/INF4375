@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FoodTruckCoordSchema {
-    private String type;
     private double[] coordinates;
 
     public FoodTruckCoordSchema(){
@@ -17,16 +16,8 @@ public class FoodTruckCoordSchema {
         return coordinates;
     }
 
-    public String getType() {
-        return type;
-    }
-
     public void setCoordinates(double[] coordinates) {
         this.coordinates = coordinates;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     @Override

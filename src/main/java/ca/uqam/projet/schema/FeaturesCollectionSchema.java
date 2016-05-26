@@ -7,19 +7,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FeaturesCollectionSchema {
-    private String type;
     private FoodTruckCoordSchema geometry;
     private FoodTruckPropertiesSchema properties;
 
     public FeaturesCollectionSchema(){
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public FoodTruckCoordSchema getGeometry() {
