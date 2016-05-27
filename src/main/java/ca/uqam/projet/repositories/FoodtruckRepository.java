@@ -1,12 +1,14 @@
 package ca.uqam.projet.repositories;
 
+import java.io.IOException;
 import java.util.*;
 import java.sql.*;
 
 import ca.uqam.projet.schema.*;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.*;
@@ -47,7 +49,7 @@ public class FoodtruckRepository {
         });
     }
 
-    public String select(String firstDate, String lastDate){
+    public CuisineDeRueSchema select(String firstDate, String lastDate){
         List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM foodtruck WHERE (jour >= '" + firstDate + "' AND jour <= '" + lastDate + "') ORDER BY jour;");
         CuisineDeRueSchema cuisine = new CuisineDeRueSchema();
         ArrayList<FeaturesCollectionSchema> foodtrucks = new ArrayList<FeaturesCollectionSchema>();
@@ -78,9 +80,6 @@ public class FoodtruckRepository {
 
         cuisine.setFeatures(foodtrucks);
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String jsonString = gson.toJson(cuisine);
-
-        return jsonString;
+        return cuisine;
     }
 }
