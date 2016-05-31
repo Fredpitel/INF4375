@@ -1,4 +1,4 @@
-<!DOCTYPE json>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8"/>
@@ -8,6 +8,7 @@
   <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/leaflet.js"></script>
   <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
   <style type="text/css">
     #mapid, #formulaire {display: inline-block; *display: inline; zoom: 1; vertical-align: top;  margin: 25px;}
@@ -20,14 +21,8 @@
   <div class="row">
     <div class="col-md-12">
       <div id="mapid"></div>
-      <script>
-        var mymap = L.map('mapid').setView([45.5, -73.67], 12);
-
-        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
-          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-          maxZoom: 18,
-          id: 'mapbox.streets'
-        }).addTo(mymap);
+        <script>
+          initMap();
         </script>
       <div id="formulaire" align="center">
         <br/>
@@ -42,7 +37,7 @@
             <input type="date" id="lastDate"/>
           </fieldset>
           <fieldset class="form-group">
-            <input type="button" value="Rechercher" onclick="getTrucks()"/>
+            <input type="button" value="Rechercher" onclick="validateDate()"/>
           </fieldset>
         </form>
         <p id="nbCamions"></p>

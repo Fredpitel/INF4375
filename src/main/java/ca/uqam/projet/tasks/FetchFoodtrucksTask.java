@@ -16,12 +16,12 @@ public class FetchFoodtrucksTask {
 
     @Autowired private FoodtruckRepository repository;
 
-    @Scheduled(cron="0 0 0,12 * * ?")
+    @Scheduled(cron="0/5 * * * * ?")
     public void execute() {
 
         RestTemplate restTemplate = new RestTemplate();
         CuisineDeRueSchema foodtrucks = restTemplate.getForObject("http://camionderue.com/donneesouvertes/geojson",CuisineDeRueSchema.class);
-
+        repository.truncate();
         foodtrucks.getFeatures().stream().forEach(repository::insert);
     }
 }

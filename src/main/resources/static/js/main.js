@@ -1,3 +1,25 @@
+
+
+function validateDate(){
+    var firstDate = document.getElementById("firstDate").value;
+    var lastDate = document.getElementById("lastDate").value;
+
+    if(!firstDate || !lastDate ){
+        alert("Veuillez entrer deux dates valides.");
+        return false;
+    }
+
+    var fDate = new Date(firstDate);
+    var lDate = new Date(lastDate);
+
+    if(firstDate > lastDate){
+        alert("La deuxième date doit être plus grande ou égale à la première.");
+        return false;
+    }
+
+    getTrucks();
+}
+
 function getTrucks(){
     var firstDate = document.getElementById("firstDate").value;
     var lastDate = document.getElementById("lastDate").value;
@@ -6,23 +28,24 @@ function getTrucks(){
     httpRequest = new XMLHttpRequest();
 
     if (!httpRequest) {
-      alert('Erreur lors de la requête HTTP.');
+      alert('Erreur lors de la requête HTTP');
       return false;
     }
 
     httpRequest.onreadystatechange = function(){
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
           if (httpRequest.status === 200) {
-            alert(httpRequest.responseText);
             var jsonReponse = JSON.parse(httpRequest.responseText);
+            addMarkers(jsonReponse.features);
+
             var nbCamions = 0;
             var i;
             for(i = 0; i < jsonReponse.features.length; i++) {
               nbCamions++;
             }
-            document.getElementById("nbCamions").innerHTML = "Nombre de camions trouvés: " + nbCamions;
+            document.getElementById("nbCamions").innerHTML = "Nombre d'horaires de camions trouvés: " + nbCamions;
           } else {
-            alert('Erreur lors de la requête HTTP ' + httpRequest.status);
+            alert('Erreur lors de la requête HTTP');
           }
         }
     };

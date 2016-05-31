@@ -30,6 +30,11 @@ public class FoodtruckRepository {
                     + " on conflict do nothing"
             ;
 
+    public void truncate(){
+        jdbcTemplate.execute("ALTER SEQUENCE foodtruck_idfoodtruck_seq RESTART WITH 1");
+        jdbcTemplate.execute("TRUNCATE TABLE foodtruck;");
+    }
+
     public int insert(FeaturesCollectionSchema foodtruck) {
         FoodTruckPropertiesSchema propreties = foodtruck.getProperties();
 
@@ -67,7 +72,7 @@ public class FoodtruckRepository {
 
             double[] coordDouble = new double[2];
             coordDouble[0] = Double.parseDouble("" + geometry.get("st_x"));
-            coordDouble[1] = Double.parseDouble("" +geometry.get("st_y"));
+            coordDouble[1] = Double.parseDouble("" + geometry.get("st_y"));
 
             coord.setCoordinates(coordDouble);
             foodtruck.setGeometry(coord);
