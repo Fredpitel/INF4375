@@ -32,7 +32,7 @@
       <div id="formulaire" align="center">
         <br/>
         <h1>Veuillez entrer les dates désirées.</h1><br/>
-        <form id="form" onsubmit="return validateForm()">
+        <form id="form">
           <fieldset class="form-group">
             <label>Première date:</label>
             <input type="date" id="firstDate"/>
@@ -42,12 +42,10 @@
             <input type="date" id="lastDate"/>
           </fieldset>
           <fieldset class="form-group">
-            <input type="submit" value="Rechercher" onclick="getTrucks()"/>
+            <input type="button" value="Rechercher" onclick="getTrucks()"/>
           </fieldset>
         </form>
-        <div id="nbCamions">
-          <p></p>
-        </div>
+        <p id="nbCamions"></p>
       </div>
     </div>
   </div>

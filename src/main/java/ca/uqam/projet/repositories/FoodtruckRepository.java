@@ -1,14 +1,10 @@
 package ca.uqam.projet.repositories;
 
-import java.io.IOException;
 import java.util.*;
 import java.sql.*;
 
 import ca.uqam.projet.schema.*;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.*;

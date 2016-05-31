@@ -1,28 +1,32 @@
-function validateForm(){
-    var firstDate = document.form.firstDate.value;
-    var lastDate = document.form.lastDate.value;
+function getTrucks(){
+    var firstDate = document.getElementById("firstDate").value;
+    var lastDate = document.getElementById("lastDate").value;
+    var url = "http://localhost:8080/horaires-camions?du=" + encodeURIComponent(firstDate) + "&au=" + encodeURIComponent(lastDate);
 
-    if(firstDate == null || lastDate == null){
-        return false;
+    httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+      alert('Erreur lors de la requête HTTP.');
+      return false;
     }
 
-    return true;
-}
-
-function getTrucks(){
-    $.ajax({
-        type: "post",
-        url: "http://localhost:8080/horaires-camions",
-        cache: false,
-        data:"firstDate=" + $("#firstDate").val() + "&lastDate=" + $("#lastDate").val(),
-        success: function(response){
-            alert("Oui");
-            $('#nbCamions').html("");
-            var obj = JSON.parse(response);
-            $('#nbCamions').html("Nombre de camion(s) trouvé(s): " + obj.features.size());
-        },
-        error: function(){
-            alert('Erreur lors de la requête');
+    httpRequest.onreadystatechange = function(){
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+          if (httpRequest.status === 200) {
+            alert(httpRequest.responseText);
+            var jsonReponse = JSON.parse(httpRequest.responseText);
+            var nbCamions = 0;
+            var i;
+            for(i = 0; i < jsonReponse.features.length; i++) {
+              nbCamions++;
+            }
+            document.getElementById("nbCamions").innerHTML = "Nombre de camions trouvés: " + nbCamions;
+          } else {
+            alert('Erreur lors de la requête HTTP ' + httpRequest.status);
+          }
         }
-    });
+    };
+
+    httpRequest.open('GET', url);
+    httpRequest.send();
 }
