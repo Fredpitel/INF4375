@@ -21,7 +21,19 @@ function addMarkers(foodtrucks){
         var lat = foodtrucks[i].geometry.coordinates[1];
 	    var latLong = new L.LatLng(lat, lon, true);
 		var marker = new L.Marker(latLong);
+        var popup = "<dl><dt>Camion: </dt>"
+                    + "<dd>" + foodtrucks[i].properties.Camion + "</dd>"
+                    + "<dt>Emplacement: </dt>"
+                    + "<dd>" + foodtrucks[i].properties.Lieu + "</dd>"
+                    + "<dt>Jour: </dt>"
+                    + "<dd>" + foodtrucks[i].properties.Date + "</dd>"
+                    + "<dt>Heure d'arrivée: </dt>"
+                    + "<dd>" + foodtrucks[i].properties.Heure_debut + "</dd>"
+                    + "<dt>Heure de départ: </dt>"
+                    + "<dd>" + foodtrucks[i].properties.Heure_fin + "</dd>"
+                    + "</dl>";
 
+        marker.bindPopup(popup);
 		marker.data = foodtrucks[i];
 		map.addLayer(marker);
 		listMarkers.push(marker);

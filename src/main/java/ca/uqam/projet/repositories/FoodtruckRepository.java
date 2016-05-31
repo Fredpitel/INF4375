@@ -63,7 +63,7 @@ public class FoodtruckRepository {
             properties.setCamion("" + row.get("camion"));
             properties.setLieu("" + row.get("lieu"));
             properties.setHeure_debut("" + row.get("heure_debut"));
-            properties.setHeure_fin("" + row.get("heure_debut"));
+            properties.setHeure_fin("" + row.get("heure_fin"));
             properties.setDate("" + row.get("jour"));
 
             foodtruck.setProperties(properties);
