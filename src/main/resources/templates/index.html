@@ -18,32 +18,29 @@
 </head>
 <body>
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      <div id="mapid"></div>
-        <script>
-          initMap();
-        </script>
-      <div id="formulaire" align="center">
-        <br/>
-        <h1>Veuillez entrer les dates désirées.</h1><br/>
-        <form id="form">
-          <fieldset class="form-group">
-            <label>Première date:</label>
-            <input type="date" id="firstDate"/>
-          </fieldset>
-          <fieldset class="form-group">
-            <label>Deuxième date:</label>
-            <input type="date" id="lastDate"/>
-          </fieldset>
-          <fieldset class="form-group">
-            <input type="button" value="Rechercher" onclick="validateDate()"/>
-          </fieldset>
-        </form>
-        <p id="nbCamions"></p>
-      </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="mapid"></div>
+            <script>initMap();</script>
+            <div id="formulaire" align="center">
+                <h1>Veuillez entrer les dates désirées.</h1><br/>
+                <form id="form">
+                    <fieldset class="form-group">
+                        <label>Première date:</label>
+                        <input type="date" id="firstDate"/>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label>Deuxième date:</label>
+                        <input type="date" id="lastDate"/>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <input type="button" value="Rechercher" onclick="validateDate()"/>
+                    </fieldset>
+                </form>
+                <p id="nbCamions"></p>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 </body>
 </html>

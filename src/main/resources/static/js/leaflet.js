@@ -29,10 +29,15 @@ function addMarkers(foodtrucks){
                     + "<dt>Heure d'arrivée: </dt>"
                     + "<dd>" + foodtrucks[i].properties.Heure_debut + "</dd>"
                     + "<dt>Heure de départ: </dt>"
-                    + "<dd>" + foodtrucks[i].properties.Heure_fin + "</dd>"
-                    + "</dl>";
+                    + "<dd>" + foodtrucks[i].properties.Heure_fin + "</dd></dl>";
 
         marker.bindPopup(popup);
+        marker.on('mouseover', function (e) {
+            this.openPopup();
+        });
+        marker.on('mouseout', function (e) {
+            this.closePopup();
+        });
 		marker.data = foodtrucks[i];
 		map.addLayer(marker);
 		listMarkers.push(marker);
