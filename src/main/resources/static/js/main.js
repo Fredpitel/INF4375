@@ -39,7 +39,6 @@ function getTrucks(){
             addMarkers(jsonReponse.features);
 
             var nbCamions = 0;
-            var i;
             for(i = 0; i < jsonReponse.features.length; i++) {
               nbCamions++;
             }
