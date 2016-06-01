@@ -1,7 +1,9 @@
 package ca.uqam.projet.repositories;
 
-import java.util.*;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import ca.uqam.projet.schema.*;
 
@@ -34,5 +36,32 @@ public class BixiRepository {
             ps.setInt(3, bixi.getDa());
             return ps;
         });
+    }
+
+    public StationsSchema select(double lat, double lon){
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM bixi WHERE GeometryType(ST_Centroid(coord)) = 'POINT' AND ST_Distance_Sphere( ST_Point(ST_X(ST_Centroid(coord)), ST_Y(ST_Centroid(coord))), (ST_MakePoint(" + lat + ", " + lon + "))) <= 200;");
+        StationsSchema stations = new StationsSchema();
+        ArrayList<BixiSchema> bixis = new ArrayList<BixiSchema>();
+
+        for(Map<String, Object> row : rows) {
+            BixiSchema bixi = new BixiSchema();
+            bixi.setBa((int)row.get("nbBikes"));
+            bixi.setDa((int)row.get("nbEmptyDocks"));
+
+            Map<String, Object> geometry = jdbcTemplate.queryForMap("SELECT ST_X(coord), ST_Y(coord) FROM bixi WHERE idBixi = " + row.get("idBixi") + ";");
+
+            double[] coordDouble = new double[2];
+            coordDouble[0] = Double.parseDouble("" + geometry.get("st_x"));
+            coordDouble[1] = Double.parseDouble("" + geometry.get("st_y"));
+
+            bixi.setLa(coordDouble[0]);
+            bixi.setLo(coordDouble[1]);
+
+            bixis.add(bixi);
+        }
+
+        stations.setStations(bixis);
+
+        return stations;
     }
 }

@@ -1,9 +1,6 @@
 package ca.uqam.projet.schema;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.xml.bind.annotation.*;
 
 /**
  * Created by deasel on 2016-05-16.
@@ -51,10 +48,4 @@ public class BixiSchema {
     public int getDa() {
         return da;
     }
-
-/*@Override
-    public String toString() {
-        return ""+s+" has "+ba+" available";
-    }
-    */
 }

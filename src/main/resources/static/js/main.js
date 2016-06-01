@@ -22,7 +22,6 @@ function validateDate(){
 
 function getTrucks(firstDate, lastDate){
     var url = "http://localhost:8080/horaires-camions?du=" + encodeURIComponent(firstDate) + "&au=" + encodeURIComponent(lastDate);
-
     var httpRequest = new XMLHttpRequest();
 
     if (!httpRequest) {
@@ -34,10 +33,13 @@ function getTrucks(firstDate, lastDate){
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (httpRequest.status === 200) {
                 var jsonReponse = JSON.parse(httpRequest.responseText);
-                addMarkers(jsonReponse.features);
-
                 var nbCamions = 0;
+
+                removeFoodtruckMarkers();
                 for(i = 0; i < jsonReponse.features.length; i++) {
+                    var marker = makeMarkers(jsonReponse.features[i].geometry.coordinates[0], jsonReponse.features[i].geometry.coordinates[1]);
+                    marker.data = jsonReponse.features[i];
+                    makeFoodtruckPopup(marker)
                     nbCamions++;
                 }
                 document.getElementById("nbCamions").innerHTML = "Nombre d'horaires de camions trouvés: " + nbCamions;
@@ -46,6 +48,37 @@ function getTrucks(firstDate, lastDate){
                 return false;
             }
         }
+    };
+
+    httpRequest.open('GET', url);
+    httpRequest.send();
+}
+
+function getBixis(coordinates){
+    var url = "http://localhost:8080/bixis?lat=" + encodeURIComponent(coordinates[1]) + "&lon=" +  encodeURIComponent(coordinates[0]);
+    var httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+        alert('Erreur lors de la requête HTTP');
+        return false;
+    }
+
+    httpRequest.onreadystatechange = function(){
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+                var jsonReponse = JSON.parse(httpRequest.responseText);
+                removeBixiMarkers();
+                for(i = 0; i < jsonReponse.stations.length; i++) {
+                    var marker = makeMarkers(jsonReponse.stations[i].lo, jsonReponse.stations[i].la);
+                    marker.data = jsonReponse.stations[i];
+                    makeBixiPopup(marker)
+                }
+            } else {
+                alert('Erreur lors de la requête HTTP');
+                return false;
+            }
+        }
+
     };
 
     httpRequest.open('GET', url);

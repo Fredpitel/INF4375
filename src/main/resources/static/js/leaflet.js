@@ -1,5 +1,6 @@
 var map;
-var listMarkers = [];
+var listFoodtruckMarkers = [];
+var listBixiMarkers = [];
 
 function initMap(){
     map = L.map('mapid').setView([45.52, -73.66], 12);
@@ -9,44 +10,62 @@ function initMap(){
         maxZoom: 25,
         id: 'mapbox.streets'
         }).addTo(map);
-
 }
 
-function addMarkers(foodtrucks){
-    removeMarkers();
-
-    for (i = 0; i < foodtrucks.length; i++) {
-        var lon = foodtrucks[i].geometry.coordinates[0];
-        var lat = foodtrucks[i].geometry.coordinates[1];
-	    var latLong = new L.LatLng(lat, lon);
-		var marker = new L.Marker(latLong);
-        var popup = "<dl><dt>Camion: </dt>"
-                    + "<dd>" + foodtrucks[i].properties.Camion + "</dd>"
-                    + "<dt>Emplacement: </dt>"
-                    + "<dd>" + foodtrucks[i].properties.Lieu + "</dd>"
-                    + "<dt>Jour: </dt>"
-                    + "<dd>" + foodtrucks[i].properties.Date + "</dd>"
-                    + "<dt>Heure d'arrivée: </dt>"
-                    + "<dd>" + foodtrucks[i].properties.Heure_debut + "</dd>"
-                    + "<dt>Heure de départ: </dt>"
-                    + "<dd>" + foodtrucks[i].properties.Heure_fin + "</dd></dl>";
-
-        marker.bindPopup(popup);
-        marker.on('mouseover', function (e) {
-            this.openPopup();
-        });
-        marker.on('mouseout', function (e) {
-            this.closePopup();
-        });
-		marker.data = foodtrucks[i];
-		map.addLayer(marker);
-		listMarkers.push(marker);
-    }
+function makeMarkers(lat, lon){
+	var latLong = new L.LatLng(lon, lat);
+	var marker = new L.Marker(latLong);
+    return marker;
 }
 
-function removeMarkers() {
-	for (i = 0; i < listMarkers.length; i++) {
-		map.removeLayer(listMarkers[i]);
+function makeFoodtruckPopup(marker){
+    var popup = "<dl><dt>Camion: </dt>"
+                + "<dd>" + marker.data.properties.Camion + "</dd>"
+                + "<dt>Emplacement: </dt>"
+                + "<dd>" + marker.data.properties.Lieu + "</dd>"
+                + "<dt>Jour: </dt>"
+                + "<dd>" + marker.data.properties.Date + "</dd>"
+                + "<dt>Heure d'arrivée: </dt>"
+                + "<dd>" + marker.data.properties.Heure_debut + "</dd>"
+                + "<dt>Heure de départ: </dt>"
+                + "<dd>" +marker.data.properties.Heure_fin + "</dd></dl>";
+
+    marker.bindPopup(popup);
+    marker.on('click', function (e) {
+        getBixis(marker.data.geometry.coordinates);
+    });
+
+	map.addLayer(marker);
+	listFoodtruckMarkers.push(marker);
+}
+
+function removeFoodtruckMarkers() {
+	for (i = 0; i < listFoodtruckMarkers.length; i++) {
+		map.removeLayer(listFoodtruckMarkers[i]);
 	}
-	listMarkers = [];
+	listFoodtruckMarkers = [];
+}
+
+function makeBixiPopup(marker){
+    var bixiIcon = L.icon({
+        iconUrl: '/js/images/bixi-marker-icon.png',
+        shadowUrl: '/js/images/marker-shadow.png',
+    })
+
+    var popup = "<dl><dt>Nombre de vélo(s): </dt>"
+                + "<dd>" + marker.data.ba + "</dd>"
+                + "<dt>Nombre de place(s) libre(s): </dt>"
+                + "<dd>" + marker.data.da + "</dd></dl>";
+
+    marker.bindPopup(popup);
+    marker.setIcon(bixiIcon);
+	map.addLayer(marker);
+	listBixiMarkers.push(marker);
+}
+
+function removeBixiMarkers() {
+	for (i = 0; i < listBixiMarkers.length; i++) {
+		map.removeLayer(listBixiMarkers[i]);
+	}
+	listBixiMarkers = [];
 }
