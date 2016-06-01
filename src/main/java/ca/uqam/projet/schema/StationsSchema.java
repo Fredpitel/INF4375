@@ -2,6 +2,7 @@ package ca.uqam.projet.schema;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 
 /**
@@ -10,30 +11,30 @@ import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StationsSchema {
+
     private ArrayList<BixiSchema> stations;
-    private boolean schemeSusended;
-    private long timestamp;
 
     public StationsSchema(){
     }
+
 
     public ArrayList<BixiSchema> getStations(){
         return stations;
     }
 
-    public boolean getSchemeSusended(){
+    /*public boolean getSchemeSusended(){
         return schemeSusended;
     }
 
     public long getTimestamp(){
         return timestamp;
     }
-
+    */
     public void setStations(ArrayList<BixiSchema> stations) {
         this.stations = stations;
     }
 
-    public void setschemeSusended(boolean schemeSusended) {
+    /*public void setschemeSusended(boolean schemeSusended) {
         this.schemeSusended = schemeSusended;
     }
 
@@ -50,4 +51,5 @@ public class StationsSchema {
         }
         return res;
     }
+    */
 }

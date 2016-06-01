@@ -18,7 +18,7 @@ function addMarkers(foodtrucks){
     for (i = 0; i < foodtrucks.length; i++) {
         var lon = foodtrucks[i].geometry.coordinates[0];
         var lat = foodtrucks[i].geometry.coordinates[1];
-	    var latLong = new L.LatLng(lat, lon, true);
+	    var latLong = new L.LatLng(lat, lon);
 		var marker = new L.Marker(latLong);
         var popup = "<dl><dt>Camion: </dt>"
                     + "<dd>" + foodtrucks[i].properties.Camion + "</dd>"

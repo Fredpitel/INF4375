@@ -6,7 +6,7 @@ import org.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 import org.springframework.scheduling.annotation.*;
-import org.springframework.web.client.*;
+import org.springframework.web.client.RestTemplate;
 
 @Component
 public class FetchFoodtrucksTask {
@@ -18,9 +18,8 @@ public class FetchFoodtrucksTask {
 
     @Scheduled(cron="0 0 0,12 * * ?")
     public void execute() {
-
         RestTemplate restTemplate = new RestTemplate();
-        CuisineDeRueSchema foodtrucks = restTemplate.getForObject("http://camionderue.com/donneesouvertes/geojson",CuisineDeRueSchema.class);
+        CuisineDeRueSchema foodtrucks = restTemplate.getForObject(URL,CuisineDeRueSchema.class);
         repository.truncate();
         foodtrucks.getFeatures().stream().forEach(repository::insert);
     }

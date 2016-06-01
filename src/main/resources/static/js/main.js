@@ -7,8 +7,10 @@ function validateDate(){
         return false;
     }
 
-    var fDate = new Date(firstDate);
-    var lDate = new Date(lastDate);
+    if(!(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(firstDate)) || !(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(lastDate)) ){
+        alert("Le format d'entrée des dates est AAAA-MM-JJ");
+        return false;
+    }
 
     if(firstDate > lastDate){
         alert("La deuxième date doit être plus grande ou égale à la première.");
@@ -21,7 +23,7 @@ function validateDate(){
 function getTrucks(firstDate, lastDate){
     var url = "http://localhost:8080/horaires-camions?du=" + encodeURIComponent(firstDate) + "&au=" + encodeURIComponent(lastDate);
 
-    httpRequest = new XMLHttpRequest();
+    var httpRequest = new XMLHttpRequest();
 
     if (!httpRequest) {
         alert('Erreur lors de la requête HTTP');

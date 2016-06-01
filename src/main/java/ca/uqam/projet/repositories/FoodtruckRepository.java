@@ -14,16 +14,6 @@ public class FoodtruckRepository {
 
     @Autowired private JdbcTemplate jdbcTemplate;
 
-    private static List<FeaturesCollectionSchema> FeaturesCollectionSchemas;
-
-    public List<FeaturesCollectionSchema> findAll() {
-        return FeaturesCollectionSchemas;
-    }
-
-    public FeaturesCollectionSchema findById(int id) {
-        return FeaturesCollectionSchemas.get(id-1);
-    }
-
     private static final String INSERT_STMT =
             " insert into foodtruck (camion, lieu, heure_debut, heure_fin, jour, coord)"
                     + " values (?, ?, ?, ?, ?, ST_GeomFromText(?, 4326))"
