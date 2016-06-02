@@ -48,8 +48,7 @@ function removeFoodtruckMarkers() {
 
 function makeBixiPopup(marker){
     var bixiIcon = L.icon({
-        iconUrl: '/js/images/bixi-marker-icon.png',
-        shadowUrl: '/js/images/marker-shadow.png',
+        iconUrl: '/js/images/bixi-marker-icon.png'
     })
 
     var popup = "<dl><dt>Nombre de vélo(s): </dt>"

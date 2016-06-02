@@ -1,3 +1,7 @@
+DROP TABLE bixi;
+
+DROP TABLE foodtruck;
+
 CREATE TABLE foodtruck(
 	idFoodtruck SERIAL PRIMARY KEY,
 	camion TEXT NOT NULL,

@@ -16,7 +16,7 @@ public class FetchBixiTask {
 
     @Autowired private BixiRepository repository;
 
-    @Scheduled(cron="0/5 * * * * ?")
+    @Scheduled(cron="0 0/10 * * * ?")
     public void execute() {
         RestTemplate restTemplate = new RestTemplate();
         StationsSchema stations = restTemplate.getForObject(URL, StationsSchema.class);
