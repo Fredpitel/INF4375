@@ -13,7 +13,7 @@ function initMap(){
 }
 
 function makeMarkers(lat, lon){
-	var latLong = new L.LatLng(lon, lat);
+	var latLong = new L.LatLng(lat, lon);
 	var marker = new L.Marker(latLong);
     return marker;
 }

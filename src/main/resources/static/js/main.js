@@ -38,7 +38,7 @@ function getTrucks(firstDate, lastDate){
                 removeFoodtruckMarkers();
                 removeBixiMarkers();
                 for(i = 0; i < jsonReponse.features.length; i++) {
-                    var marker = makeMarkers(jsonReponse.features[i].geometry.coordinates[0], jsonReponse.features[i].geometry.coordinates[1]);
+                    var marker = makeMarkers(jsonReponse.features[i].geometry.coordinates[1], jsonReponse.features[i].geometry.coordinates[0]);
                     marker.data = jsonReponse.features[i];
                     makeFoodtruckPopup(marker)
                     nbCamions++;
@@ -70,7 +70,7 @@ function getBixis(coordinates){
                 var jsonReponse = JSON.parse(httpRequest.responseText);
                 removeBixiMarkers();
                 for(i = 0; i < jsonReponse.stations.length; i++) {
-                    var marker = makeMarkers(jsonReponse.stations[i].lo, jsonReponse.stations[i].la);
+                    var marker = makeMarkers(jsonReponse.stations[i].la, jsonReponse.stations[i].lo);
                     marker.data = jsonReponse.stations[i];
                     makeBixiPopup(marker)
                 }

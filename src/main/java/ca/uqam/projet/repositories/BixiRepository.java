@@ -31,7 +31,7 @@ public class BixiRepository {
     public int insert(BixiSchema bixi){
         return jdbcTemplate.update(conn -> {
             PreparedStatement ps = conn.prepareStatement(INSERT_STMT);
-            ps.setString(1, "POINT(" + bixi.getLa() + " " + bixi.getLo() + ")");
+            ps.setString(1, "POINT(" + bixi.getLo() + " " + bixi.getLa() + ")");
             ps.setInt(2, bixi.getBa());
             ps.setInt(3, bixi.getDa());
             return ps;
@@ -40,16 +40,12 @@ public class BixiRepository {
 
     public StationsSchema findAll(){
         List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM bixi;");
-        StationsSchema stations = makeJavaObject(rows);
-
-        return stations;
+        return makeJavaObject(rows);
     }
 
     public StationsSchema selectByCoord(double lat, double lon){
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM bixi WHERE st_distance_spheroid(ST_Transform(coord, 4236), ST_transform(ST_MakePoint(" + lon + ", " + lat + "), 4236), \'SPHEROID[\"WGS 84\",6378137,298.257223563]\') <= 200;");
-        StationsSchema stations = makeJavaObject(rows);
-
-        return stations;
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM bixi WHERE st_distance_sphere(coord, ST_MakePoint(" + lon + ", " + lat + ", 4326)) <= 200;");
+        return makeJavaObject(rows);
     }
 
     private StationsSchema makeJavaObject(List<Map<String, Object>> rows){
@@ -67,8 +63,8 @@ public class BixiRepository {
             coordDouble[0] = Double.parseDouble("" + geometry.get("st_x"));
             coordDouble[1] = Double.parseDouble("" + geometry.get("st_y"));
 
-            bixi.setLa(coordDouble[0]);
-            bixi.setLo(coordDouble[1]);
+            bixi.setLo(coordDouble[0]);
+            bixi.setLa(coordDouble[1]);
 
             bixis.add(bixi);
         }
