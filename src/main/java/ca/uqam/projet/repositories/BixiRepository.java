@@ -38,8 +38,21 @@ public class BixiRepository {
         });
     }
 
-    public StationsSchema select(double lat, double lon){
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM bixi WHERE GeometryType(ST_Centroid(coord)) = 'POINT' AND ST_Distance_Sphere( ST_Point(ST_X(ST_Centroid(coord)), ST_Y(ST_Centroid(coord))), (ST_MakePoint(" + lat + ", " + lon + "))) <= 200;");
+    public StationsSchema findAll(){
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM bixi;");
+        StationsSchema stations = makeJavaObject(rows);
+
+        return stations;
+    }
+
+    public StationsSchema selectByCoord(double lat, double lon){
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM bixi WHERE st_distance_spheroid(ST_Transform(coord, 4236), ST_transform(ST_MakePoint(" + lon + ", " + lat + "), 4236), \'SPHEROID[\"WGS 84\",6378137,298.257223563]\') <= 200;");
+        StationsSchema stations = makeJavaObject(rows);
+
+        return stations;
+    }
+
+    private StationsSchema makeJavaObject(List<Map<String, Object>> rows){
         StationsSchema stations = new StationsSchema();
         ArrayList<BixiSchema> bixis = new ArrayList<BixiSchema>();
 

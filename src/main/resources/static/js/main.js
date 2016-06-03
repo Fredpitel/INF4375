@@ -36,6 +36,7 @@ function getTrucks(firstDate, lastDate){
                 var nbCamions = 0;
 
                 removeFoodtruckMarkers();
+                removeBixiMarkers();
                 for(i = 0; i < jsonReponse.features.length; i++) {
                     var marker = makeMarkers(jsonReponse.features[i].geometry.coordinates[0], jsonReponse.features[i].geometry.coordinates[1]);
                     marker.data = jsonReponse.features[i];

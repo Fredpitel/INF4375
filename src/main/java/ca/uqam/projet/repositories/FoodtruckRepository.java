@@ -40,8 +40,21 @@ public class FoodtruckRepository {
         });
     }
 
-    public CuisineDeRueSchema select(String firstDate, String lastDate){
+    public CuisineDeRueSchema findAll(){
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM foodtruck;");
+        CuisineDeRueSchema cuisine = makeJavaObject(rows);
+
+        return cuisine;
+    }
+
+    public CuisineDeRueSchema selectByDate(String firstDate, String lastDate){
         List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM foodtruck WHERE (jour >= '" + firstDate + "' AND jour <= '" + lastDate + "') ORDER BY jour;");
+        CuisineDeRueSchema cuisine = makeJavaObject(rows);
+
+        return cuisine;
+    }
+
+    private CuisineDeRueSchema makeJavaObject(List<Map<String, Object>> rows){
         CuisineDeRueSchema cuisine = new CuisineDeRueSchema();
         ArrayList<FeaturesCollectionSchema> foodtrucks = new ArrayList<FeaturesCollectionSchema>();
 

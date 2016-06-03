@@ -31,6 +31,14 @@ function makeFoodtruckPopup(marker){
                 + "<dd>" +marker.data.properties.Heure_fin + "</dd></dl>";
 
     marker.bindPopup(popup);
+    marker.on("mouseover", function (e) {
+        marker.openPopup();
+    })
+
+    marker.on("mouseout", function (e) {
+        marker.closePopup();
+    })
+
     marker.on('click', function (e) {
         getBixis(marker.data.geometry.coordinates);
     });
@@ -48,13 +56,23 @@ function removeFoodtruckMarkers() {
 
 function makeBixiPopup(marker){
     var bixiIcon = L.icon({
-        iconUrl: '/js/images/bixi-marker-icon.png'
+        iconUrl: '/js/images/bixi-marker-icon.png',
+        shadowUrl: '/js/images/marker-shadow.png'
     })
 
-    var popup = "<dl><dt>Nombre de vélo(s): </dt>"
+    var popup = "<h4 align=\'center\'>Station Bixi</h4>"
+                + "<dl><dt>Nombre de vélo(s): </dt>"
                 + "<dd>" + marker.data.ba + "</dd>"
                 + "<dt>Nombre de place(s) libre(s): </dt>"
                 + "<dd>" + marker.data.da + "</dd></dl>";
+
+    marker.on("mouseover", function (e) {
+        marker.openPopup();
+    })
+
+    marker.on("mouseout", function (e) {
+        marker.closePopup();
+    })
 
     marker.bindPopup(popup);
     marker.setIcon(bixiIcon);

@@ -26,13 +26,21 @@ public class ApplicationController {
       }
 
     @RequestMapping("/horaires-camions")
-    public @ResponseBody CuisineDeRueSchema horaire(@RequestParam("du") String firstDate, @RequestParam("au") String lastDate) {
-        return foodtruckRepository.select(firstDate, lastDate);
+    public @ResponseBody CuisineDeRueSchema horaire(@RequestParam(value ="du", required = false) String firstDate, @RequestParam(value = "au", required = false) String lastDate) {
+        if(firstDate == null || lastDate == null){
+            return foodtruckRepository.findAll();
+        } else {
+            return foodtruckRepository.selectByDate(firstDate, lastDate);
+        }
     }
 
     @RequestMapping("/bixis")
-    public @ResponseBody StationsSchema bixi(@RequestParam("lat") double lat, @RequestParam("lon") double lon) {
-        return bixiRepository.select(lat, lon);
+    public @ResponseBody StationsSchema bixi(@RequestParam(value = "lat", required = false) Double lat, @RequestParam(value = "lon", required = false) Double lon) {
+        if(lat == null || lon == null){
+            return bixiRepository.findAll();
+        } else {
+            return bixiRepository.selectByCoord(lat, lon);
+        }
     }
 
 
