@@ -26,5 +26,7 @@ public class test {
         FetchFoodtrucksTask fetch = new FetchFoodtrucksTask();
         fetch.execute();
 
+        RestTemplate
+
     }*/
 }
