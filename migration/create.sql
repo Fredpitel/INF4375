@@ -18,3 +18,8 @@ CREATE TABLE bixi(
 	nbBikes INTEGER NOT NULL,
 	nbEmptyDocks INTEGER NOT NULL
 );
+
+CREATE TABLE arceau(
+  idArceau SERIAL PRIMARY KEY,
+  coord GEOMETRY(POINT, 4326) NOT NULL
+);

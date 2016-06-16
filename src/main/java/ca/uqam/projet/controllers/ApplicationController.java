@@ -1,7 +1,9 @@
 package ca.uqam.projet.controllers;
 
+import ca.uqam.projet.repositories.ArceauxRepository;
 import ca.uqam.projet.repositories.BixiRepository;
 import ca.uqam.projet.repositories.FoodtruckRepository;
+import ca.uqam.projet.schema.CollectionArceauxSchema;
 import ca.uqam.projet.schema.CuisineDeRueSchema;
 import ca.uqam.projet.schema.StationsSchema;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class ApplicationController {
 
     @Autowired
     BixiRepository bixiRepository;
+
+    @Autowired
+    ArceauxRepository arceauxRepository;
 
     @RequestMapping("/")
     public String index(Model model) {
@@ -40,6 +45,15 @@ public class ApplicationController {
             return bixiRepository.findAll();
         } else {
             return bixiRepository.selectByCoord(lat, lon);
+        }
+    }
+
+    @RequestMapping("/arceaux")
+    public @ResponseBody CollectionArceauxSchema arceaux(@RequestParam(value = "lat", required = false) Double lat, @RequestParam(value = "lon", required = false) Double lon) {
+        if(lat == null || lon == null){
+            return arceauxRepository.findAll();
+        } else {
+            return arceauxRepository.selectByCoord(lat, lon);
         }
     }
 
