@@ -85,3 +85,34 @@ function getBixis(coordinates){
     httpRequest.open('GET', url);
     httpRequest.send();
 }
+
+function getVelos(coordinates){
+    var url = "http://localhost:8080/arceaux?lat=" + encodeURIComponent(coordinates[1]) + "&lon=" +  encodeURIComponent(coordinates[0]);
+    var httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+        alert('Erreur lors de la requête HTTP');
+        return false;
+    }
+
+    httpRequest.onreadystatechange = function(){
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+                var jsonReponse = JSON.parse(httpRequest.responseText);
+                removeVeloMarkers();
+                for(i = 0; i < jsonReponse.arceaux.length; i++) {
+                    var marker = makeMarkers(jsonReponse.arceaux[i].la, jsonReponse.arceaux[i].lo);
+                    marker.data = jsonReponse.arceaux[i];
+                    makeVeloPopup(marker)
+                }
+            } else {
+                alert('Erreur lors de la requête HTTP');
+                return false;
+            }
+        }
+
+    };
+
+    httpRequest.open('GET', url);
+    httpRequest.send();
+}

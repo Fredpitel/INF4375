@@ -29,7 +29,7 @@ public class ArceauxRepository {
     public int insert(ArceauxSchema arceau){
         return jdbcTemplate.update(conn -> {
             PreparedStatement ps = conn.prepareStatement(INSERT_STMT);
-            ps.setString(1, "POINT(" + arceau.getLo() + " " + arceau.getLa() + ")");
+            ps.setString(1, "POINT(" + arceau.getLa() + " " + arceau.getLo() + ")");
             return ps;
         });
     }
@@ -40,7 +40,7 @@ public class ArceauxRepository {
     }
 
     public CollectionArceauxSchema selectByCoord(double lat, double lon){
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM arceau WHERE st_distance_sphere(coord, ST_MakePoint(" + lon + ", " + lat + ", 4326)) <= 200;");
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM arceau WHERE st_distance_sphere(coord, ST_MakePoint(" + lat + ", " + lon + ", 4326)) <= 200;");
         return makeJavaObject(rows);
     }
 

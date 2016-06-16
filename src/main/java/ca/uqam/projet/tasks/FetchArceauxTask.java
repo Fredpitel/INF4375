@@ -50,7 +50,7 @@ public class FetchArceauxTask {
             if(!isFirstLine) {
                 int fieldCounter=0;
                 String lineSplit[]=line.split(",");
-                res.addArceau(new ArceauxSchema(Double.parseDouble(lineSplit[lineSplit.length-2]),Double.parseDouble(lineSplit[lineSplit.length-1])));
+                res.addArceau(new ArceauxSchema(Double.parseDouble(lineSplit[lineSplit.length-1]),Double.parseDouble(lineSplit[lineSplit.length-2])));
             } else {
                 isFirstLine = false;
             }

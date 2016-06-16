@@ -1,6 +1,8 @@
-DROP TABLE bixi;
+--DROP TABLE bixi;
 
-DROP TABLE foodtruck;
+--DROP TABLE foodtruck;
+
+--DROP TABLE arceau;
 
 CREATE TABLE foodtruck(
 	idFoodtruck SERIAL PRIMARY KEY,

@@ -1,6 +1,7 @@
 var map;
 var listFoodtruckMarkers = [];
 var listBixiMarkers = [];
+var listVeloMarkers = [];
 var markers;
 
 function initMap(){
@@ -43,6 +44,7 @@ function makeFoodtruckPopup(marker){
 
     marker.on('click', function (e) {
         getBixis(marker.data.geometry.coordinates);
+        getVelos(marker.data.geometry.coordinates);
     });
 
     markers.addLayer(marker)
@@ -88,4 +90,40 @@ function removeBixiMarkers() {
 		map.removeLayer(listBixiMarkers[i]);
 	}
 	listBixiMarkers = [];
+}
+
+function makeVeloPopup(marker){
+    var veloIcon = L.icon({
+        iconUrl: '/js/images/velo-icon.png',
+        shadowUrl: '/js/images/marker-shadow.png'
+    })
+
+    var popup = "<h4 align=\'center\'>Arceaux de velo</h4>";
+
+    marker.on("mouseover", function (e) {
+        marker.openPopup();
+    })
+
+    marker.on("mouseout", function (e) {
+        marker.closePopup();
+    })
+
+    marker.bindPopup(popup);
+    marker.setIcon(veloIcon);
+    map.addLayer(marker);
+    listVeloMarkers.push(marker);
+}
+
+function removeVeloPopup(){
+    for (i = 0; i < listVeloMarkers.length; i++) {
+        map.removeLayer(listVeloMarkers[i]);
+    }
+    listVeloMarkers = [];
+}
+
+function removeVeloMarkers() {
+    for (i = 0; i < listVeloMarkers.length; i++) {
+        map.removeLayer(listVeloMarkers[i]);
+    }
+    listVeloMarkers = [];
 }

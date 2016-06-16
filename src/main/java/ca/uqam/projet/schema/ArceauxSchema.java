@@ -5,10 +5,10 @@ package ca.uqam.projet.schema;
  */
 
 public class ArceauxSchema {
-    private double lo;
     private double la;
+    private double lo;
 
-    public ArceauxSchema(double longi, double lati){
+    public ArceauxSchema(double lati, double longi){
         lo=longi;
         la=lati;
     }
