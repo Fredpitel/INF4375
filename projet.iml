@@ -59,6 +59,7 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.6.6" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.6.6" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.6.6" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.7.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sf.jsefa:jsefa:1.1.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: xmlpull:xmlpull:1.1.2.1" level="project" />
   </component>
 </module>
