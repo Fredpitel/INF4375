@@ -48,4 +48,9 @@ public class BixiSchema {
     public int getDa() {
         return da;
     }
+
+    @Override
+    public String toString() {
+        return "Latitude:"+la+" Longitude:"+lo;
+    }
 }

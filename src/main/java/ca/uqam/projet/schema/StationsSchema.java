@@ -24,4 +24,12 @@ public class StationsSchema {
         this.stations = stations;
     }
 
+    @Override
+    public String toString() {
+        String res="";
+        for (BixiSchema bixi:stations) {
+            res+=bixi.toString();
+        }
+        return res;
+    }
 }
