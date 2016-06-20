@@ -21,13 +21,14 @@ function makeMarkers(lat, lon){
     return marker;
 }
 
-function inputBixiArceauForm(coord){
+function inputBixiArceauForm(coordOne, coordTwo){
+    var coordinates=[coordOne,coordTwo];
     bixi=document.getElementById("bixiCheck");
     arceau=document.getElementById("arceauCheck");
     if (bixi.checked)
-        getBixis(coord);
+        getBixis(coordinates);
     if (arceau.checked)
-        getVelos(coord);
+        getVelos(coordinates);
 }
 
 function makeFoodtruckPopup(marker){
@@ -46,10 +47,9 @@ function makeFoodtruckPopup(marker){
                 + "<form id='weGotForm'>"
                 + "<input id='bixiCheck' type='checkbox' name='vehicle'> Bixi<br>"
                 + "<input id='arceauCheck' type='checkbox' name='vehicle'> Arceau<br>"
-                + "<input type='button' value='Trouver'>"
+                + "<input type='button' value='Trouver' onclick='inputBixiArceauForm("+marker.data.geometry.coordinates[0]+","+marker.data.geometry.coordinates[1]+")'<br>"
                 + "</form>"
                 + "<div/>";
-
 
     marker.bindPopup(popup);
     marker.on("mouseover", function (e) {
