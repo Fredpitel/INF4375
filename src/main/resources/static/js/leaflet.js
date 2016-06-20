@@ -21,7 +21,17 @@ function makeMarkers(lat, lon){
     return marker;
 }
 
+function inputBixiArceauForm(coord){
+    bixi=document.getElementById("bixiCheck");
+    arceau=document.getElementById("arceauCheck");
+    if (bixi.checked)
+        getBixis(coord);
+    if (arceau.checked)
+        getVelos(coord);
+}
+
 function makeFoodtruckPopup(marker){
+    var coord = marker.data.geometry.coordinates;
     var popup = "<dl><dt>Camion: </dt>"
                 + "<dd>" + marker.data.properties.Camion + "</dd>"
                 + "<dt>Emplacement: </dt>"
@@ -31,21 +41,29 @@ function makeFoodtruckPopup(marker){
                 + "<dt>Heure d'arrivée: </dt>"
                 + "<dd>" + marker.data.properties.Heure_debut + "</dd>"
                 + "<dt>Heure de départ: </dt>"
-                + "<dd>" +marker.data.properties.Heure_fin + "</dd></dl>";
+                + "<dd>" +marker.data.properties.Heure_fin + "</dd></dl>"
+                + "<div id='popupForm'>"
+                + "<form id='weGotForm'>"
+                + "<input id='bixiCheck' type='checkbox' name='vehicle'> Bixi<br>"
+                + "<input id='arceauCheck' type='checkbox' name='vehicle'> Arceau<br>"
+                + "<input type='button' value='Trouver'>"
+                + "</form>"
+                + "<div/>";
+
 
     marker.bindPopup(popup);
     marker.on("mouseover", function (e) {
         marker.openPopup();
     })
 
-    marker.on("mouseout", function (e) {
+   /*marker.popup.on("mouseout", function (e) {
         marker.closePopup();
-    })
+    })*/
 
-    marker.on('click', function (e) {
+    /*marker.on('click', function (e) {
         getBixis(marker.data.geometry.coordinates);
         getVelos(marker.data.geometry.coordinates);
-    });
+    });*/
 
     markers.addLayer(marker)
 	map.addLayer(markers);
@@ -56,6 +74,8 @@ function removeFoodtruckMarkers() {
 	for (i = 0; i < listFoodtruckMarkers.length; i++) {
 		map.removeLayer(listFoodtruckMarkers[i]);
 	}
+    map.removeLayer(markers);
+    markers = new L.MarkerClusterGroup();
 	listFoodtruckMarkers = [];
 }
 

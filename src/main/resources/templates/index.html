@@ -35,7 +35,7 @@
         <li><a href="#"> Menu3 </a></li>
     </ul>
 </div>
-<div class="container-fluid">
+<div class="container-fluid" id="container">
     <div class="row">
         <div class="col-md-12">
             <div id="mapid"></div>
@@ -55,10 +55,12 @@
                         <input type="button" value="Rechercher" onclick="validateDate()"/>
                     </fieldset>
                 </form>
+                    <button onclick="getToday()">Aujourd'hui</button>
                 <p id="nbCamions"></p>
             </div>
         </div>
     </div>
 </div>
+
 </body>
 </html>

@@ -1,8 +1,27 @@
 #mapid, #formulaire {display: inline-block; *display: inline; zoom: 1; vertical-align: top;  margin: 25px;}
-#mapid {width: 65%; height: 900px;}
+#mapid {width: 65%; height: 700px;}
 #formulaire {width: 25%}
 
+#bixiBikeConfirmBox {
+    display: run-in;
+    width: 500px;
+    height: 100px;
+    position: absolute;
+    top: 35%;
+    left: 20%;
+}
 
+.confirmBoxButton {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.confirmBoxButton:hover {
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+#container{
+    position: relative;
+}
 
 
 ul {

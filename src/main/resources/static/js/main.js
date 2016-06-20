@@ -20,6 +20,24 @@ function validateDate(){
     getTrucks(firstDate, lastDate);
 }
 
+function getToday(){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if(dd<10) {
+        dd='0'+dd
+    }
+
+    if(mm<10) {
+        mm='0'+mm
+    }
+
+    today = yyyy+'-'+mm+'-'+dd;
+    getTrucks(today,today);
+}
+
 function getTrucks(firstDate, lastDate){
     var url = "http://localhost:8080/horaires-camions?du=" + encodeURIComponent(firstDate) + "&au=" + encodeURIComponent(lastDate);
     var httpRequest = new XMLHttpRequest();
