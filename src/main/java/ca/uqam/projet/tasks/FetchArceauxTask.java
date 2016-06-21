@@ -25,14 +25,13 @@ public class FetchArceauxTask {
     @Autowired
     private ArceauxRepository repository;
 
-    @Scheduled(cron="0 0 0 0/12 * ?")
+    @Scheduled(cron="0/5 * * * * ?")
     public void execute() {
         RestTemplate restTemplate = new RestTemplate();
         try {
             CollectionArceauxSchema arceauxSchema = getCollectionArceaux(csvUrl);
             repository.truncate();
             arceauxSchema.getArceaux().stream().forEach(repository::insert);
-            System.out.println(arceauxSchema);
         } catch (Exception e){
             System.out.println(e.getStackTrace());
         }

@@ -21,14 +21,15 @@ function makeMarkers(lat, lon){
     return marker;
 }
 
-function inputBixiArceauForm(coordOne, coordTwo){
-    var coordinates=[coordOne,coordTwo];
-    bixi=document.getElementById("bixiCheck");
-    arceau=document.getElementById("arceauCheck");
+function inputBixiArceauForm(lat, lon){
+    removeBixiMarkers();
+    removeVeloMarkers();
+    bixi = document.getElementById("bixiCheck");
+    arceau = document.getElementById("arceauCheck");
     if (bixi.checked)
-        getBixis(coordinates);
+        getBixis(lat, lon);
     if (arceau.checked)
-        getVelos(coordinates);
+        getVelos(lat ,lon);
 }
 
 function makeFoodtruckPopup(marker){
@@ -47,7 +48,7 @@ function makeFoodtruckPopup(marker){
                 + "<form id='weGotForm'>"
                 + "<input id='bixiCheck' type='checkbox' name='vehicle'> Bixi<br>"
                 + "<input id='arceauCheck' type='checkbox' name='vehicle'> Arceau<br>"
-                + "<input type='button' value='Trouver' onclick='inputBixiArceauForm("+marker.data.geometry.coordinates[0]+","+marker.data.geometry.coordinates[1]+")'<br>"
+                + "<input type='button' value='Trouver' onclick='inputBixiArceauForm("+marker.data.geometry.coordinates[1]+","+marker.data.geometry.coordinates[0]+")'<br>"
                 + "</form>"
                 + "<div/>";
 
@@ -59,11 +60,6 @@ function makeFoodtruckPopup(marker){
    /*marker.popup.on("mouseout", function (e) {
         marker.closePopup();
     })*/
-
-    /*marker.on('click', function (e) {
-        getBixis(marker.data.geometry.coordinates);
-        getVelos(marker.data.geometry.coordinates);
-    });*/
 
     markers.addLayer(marker)
 	map.addLayer(markers);
@@ -132,13 +128,6 @@ function makeVeloPopup(marker){
     marker.setIcon(veloIcon);
     map.addLayer(marker);
     listVeloMarkers.push(marker);
-}
-
-function removeVeloPopup(){
-    for (i = 0; i < listVeloMarkers.length; i++) {
-        map.removeLayer(listVeloMarkers[i]);
-    }
-    listVeloMarkers = [];
 }
 
 function removeVeloMarkers() {

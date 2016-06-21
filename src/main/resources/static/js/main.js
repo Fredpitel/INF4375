@@ -73,9 +73,11 @@ function getTrucks(firstDate, lastDate){
     httpRequest.send();
 }
 
-function getBixis(coordinates){
-    var url = "http://localhost:8080/bixis?lat=" + encodeURIComponent(coordinates[1]) + "&lon=" +  encodeURIComponent(coordinates[0]);
+function getBixis(lat, lon){
+    var url = "http://localhost:8080/bixis?lat=" + encodeURIComponent(lat) + "&lon=" +  encodeURIComponent(lon);
     var httpRequest = new XMLHttpRequest();
+
+    console.log(url);
 
     if (!httpRequest) {
         alert('Erreur lors de la requête HTTP');
@@ -104,9 +106,11 @@ function getBixis(coordinates){
     httpRequest.send();
 }
 
-function getVelos(coordinates){
-    var url = "http://localhost:8080/arceaux?lat=" + encodeURIComponent(coordinates[1]) + "&lon=" +  encodeURIComponent(coordinates[0]);
+function getVelos(lat, lon){
+    var url = "http://localhost:8080/arceaux?lat=" + encodeURIComponent(lat) + "&lon=" +  encodeURIComponent(lon);
     var httpRequest = new XMLHttpRequest();
+
+    console.log(url);
 
     if (!httpRequest) {
         alert('Erreur lors de la requête HTTP');
