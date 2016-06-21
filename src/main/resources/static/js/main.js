@@ -88,7 +88,6 @@ function getBixis(lat, lon){
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (httpRequest.status === 200) {
                 var jsonReponse = JSON.parse(httpRequest.responseText);
-                removeBixiMarkers();
                 for(i = 0; i < jsonReponse.stations.length; i++) {
                     var marker = makeMarkers(jsonReponse.stations[i].la, jsonReponse.stations[i].lo);
                     marker.data = jsonReponse.stations[i];
@@ -121,7 +120,6 @@ function getVelos(lat, lon){
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (httpRequest.status === 200) {
                 var jsonReponse = JSON.parse(httpRequest.responseText);
-                removeVeloMarkers();
                 for(i = 0; i < jsonReponse.arceaux.length; i++) {
                     var marker = makeMarkers(jsonReponse.arceaux[i].la, jsonReponse.arceaux[i].lo);
                     marker.data = jsonReponse.arceaux[i];

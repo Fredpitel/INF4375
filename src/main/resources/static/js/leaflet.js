@@ -5,14 +5,18 @@ var listVeloMarkers = [];
 var markers;
 
 function initMap(){
-    markers = new L.MarkerClusterGroup();
+    markers = new L.MarkerClusterGroup({
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: false
+    });
+
     map = L.map('mapid').setView([45.52, -73.66], 12);
 
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 18,
         id: 'mapbox.streets'
-        }).addTo(map);
+    }).addTo(map);
 }
 
 function makeMarkers(lat, lon){
@@ -44,22 +48,17 @@ function makeFoodtruckPopup(marker){
                 + "<dd>" + marker.data.properties.Heure_debut + "</dd>"
                 + "<dt>Heure de départ: </dt>"
                 + "<dd>" +marker.data.properties.Heure_fin + "</dd></dl>"
-                + "<div id='popupForm'>"
-                + "<form id='weGotForm'>"
                 + "<input id='bixiCheck' type='checkbox' name='vehicle'> Bixi<br>"
-                + "<input id='arceauCheck' type='checkbox' name='vehicle'> Arceau<br>"
-                + "<input type='button' value='Trouver' onclick='inputBixiArceauForm("+marker.data.geometry.coordinates[1]+","+marker.data.geometry.coordinates[0]+")'<br>"
-                + "</form>"
-                + "<div/>";
+                + "<input id='arceauCheck' type='checkbox' name='vehicle'> Arceau<br><br>"
+                + "<div align=\'center\'>"
+                + "<input type='button' value='Trouver' align='center' onclick='inputBixiArceauForm("+marker.data.geometry.coordinates[1]+","+marker.data.geometry.coordinates[0]+")'<br>";
+                + "</div>"
 
     marker.bindPopup(popup);
-    marker.on("mouseover", function (e) {
+    marker.on("click", function (e) {
+        map.setView([marker.data.geometry.coordinates[1], marker.data.geometry.coordinates[0]], 18)
         marker.openPopup();
     })
-
-   /*marker.popup.on("mouseout", function (e) {
-        marker.closePopup();
-    })*/
 
     markers.addLayer(marker)
 	map.addLayer(markers);
