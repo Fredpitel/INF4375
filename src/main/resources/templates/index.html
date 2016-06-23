@@ -18,8 +18,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
             integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
             crossorigin="anonymous"></script>
-    <script type="text/javascript" src="js/main.js"></script>
-    <script type="text/javascript" src="js/leaflet.js"></script>
+    <script type="text/javascript" src="js/foodtrucks.js"></script>
     <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
     <script type='text/javascript'
             src='http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js'></script>
@@ -37,7 +36,6 @@
     <div class="row">
         <div class="col-md-12">
             <div id="mapid"></div>
-            <script>initMap();</script>
             <div id="formulaire" align="center">
                 <h1>Veuillez entrer les dates désirées.</h1><br/>
                 <form id="form">
@@ -50,11 +48,12 @@
                         <input type="date" id="lastDate"/>
                     </fieldset>
                     <fieldset class="form-group">
-                        <input type="button" value="Rechercher" onclick="validateDate()"/>
+                        <input type="submit" value="Rechercher"/>
                     </fieldset>
                 </form>
-                    <button onclick="getToday()">Aujourd'hui</button>
-                <p id="nbCamions"></p>
+                    <button id='today'>Aujourd'hui</button>
+                <p id="nbCamions"></p><br/>
+                <p id="favoriteTrucks"></p>
             </div>
         </div>
     </div>

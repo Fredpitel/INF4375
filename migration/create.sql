@@ -1,8 +1,13 @@
+--DROP TABLE listefavoris;
+
+--DROP TABLE usager;
+
+--DROP TABLE arceau;
+
 --DROP TABLE bixi;
 
 --DROP TABLE foodtruck;
 
---DROP TABLE arceau;
 
 CREATE TABLE foodtruck(
 	idFoodtruck SERIAL PRIMARY KEY,
@@ -25,3 +30,14 @@ CREATE TABLE arceau(
   idArceau SERIAL PRIMARY KEY,
   coord GEOMETRY(POINT, 4326) NOT NULL
 );
+
+CREATE TABLE usager(
+	idusager SERIAL PRIMARY KEY,
+);
+
+CREATE TABLE listefavoris(
+	idlistefavoris SERIAL PRIMARY KEY,
+	idusager INTEGER,
+	camion TEXT,
+	FOREIGN KEY (idusager) REFERENCES usager(idusager)
+)

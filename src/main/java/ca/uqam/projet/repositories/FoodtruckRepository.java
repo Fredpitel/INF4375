@@ -5,6 +5,7 @@ import java.sql.*;
 
 import ca.uqam.projet.schema.*;
 
+import org.postgresql.jdbc4.Jdbc4Array;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.*;

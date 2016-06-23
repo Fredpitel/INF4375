@@ -3,15 +3,20 @@ package ca.uqam.projet.controllers;
 import ca.uqam.projet.repositories.ArceauxRepository;
 import ca.uqam.projet.repositories.BixiRepository;
 import ca.uqam.projet.repositories.FoodtruckRepository;
+import ca.uqam.projet.repositories.ListeFavorisRepository;
 import ca.uqam.projet.schema.CollectionArceauxSchema;
 import ca.uqam.projet.schema.CuisineDeRueSchema;
+import ca.uqam.projet.schema.ListeFavorisSchema;
 import ca.uqam.projet.schema.StationsSchema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 @Controller
 public class ApplicationController {
@@ -25,6 +30,9 @@ public class ApplicationController {
     @Autowired
     ArceauxRepository arceauxRepository;
 
+    @Autowired
+    ListeFavorisRepository listeFavorisRepository;
+
     @RequestMapping("/")
     public String index(Model model) {
         return "index";
@@ -37,6 +45,12 @@ public class ApplicationController {
         } else {
             return foodtruckRepository.selectByDate(firstDate, lastDate);
         }
+    }
+
+    @RequestMapping("/{userId}/favoris")
+    public @ResponseBody
+    ListeFavorisSchema favoris(@PathVariable String userId) {
+        return listeFavorisRepository.selectFavoritesByUserID(userId);
     }
 
     @RequestMapping("/bixis")
