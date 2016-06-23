@@ -1,10 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
-  var model = new Model();
-  model.subscribers.push(renderFavoriteFoodtruckCollectionView);
-  model.subscribers.push(renderFoodtruckMarkersView);
-  getFavoriteTrucks(model)
-  bindInputDateController(model);
-  initMap(model);
+    var model = new Model();
+    model.subscribers.push(renderFavoriteFoodtruckCollectionView);
+    model.subscribers.push(renderFoodtruckMarkersView);
+    model.subscribers.push(renderBixiMarkersView);
+    model.subscribers.push(renderVeloMarkersView);
+    getFavoriteTrucks(model)
+    bindInputDateController(model);
+    initMap(model);
 });
 
 class Model{
@@ -35,13 +37,14 @@ class Model{
         this.notify();
     }
 
-    addBixi(marker){
-        this.bixiMarkes.push(marker);
+    addBixi(bixi){
+        this.bixis.push(bixi);
+        console.log(this.bixis.length);
         this.notify();
     }
 
-    addVelo(marker){
-        this.veloMarkers.push(marker);
+    addVelo(velo){
+        this.velos.push(velo);
         this.notify();
     }
 
@@ -193,6 +196,81 @@ function renderFoodtruckMarkersView(model){
     document.getElementById("nbCamions").innerHTML = "Nombre d'horaires de camions trouvés: " + nbCamions;
 }
 
+function getBixis(lat, lon, model){
+    var url = "http://localhost:8080/bixis?lat=" + encodeURIComponent(lat) + "&lon=" +  encodeURIComponent(lon);
+    var httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+        alert('Erreur lors de la requête HTTP');
+        return false;
+    }
+
+    httpRequest.onreadystatechange = function(){
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+                var jsonReponse = JSON.parse(httpRequest.responseText);
+                for(i = 0; i < jsonReponse.stations.length; i++) {
+                    marker = makeMarkers(jsonReponse.stations[i].la, jsonReponse.stations[i].lo);
+                    marker.data = jsonReponse.stations[i];
+                    makeBixiPopup(marker);
+                    model.addBixi(marker);
+                }
+            } else {
+                alert('Erreur lors de la requête HTTP');
+                return false;
+            }
+        }
+
+    };
+
+    httpRequest.open('GET', url);
+    httpRequest.send();
+}
+
+function renderBixiMarkersView(model){
+    for(i = 0; i < model.bixis.length; i++) {
+        model.map.addLayer(model.bixis[i]);
+    }
+}
+
+function getVelos(lat, lon, model){
+    var url = "http://localhost:8080/arceaux?lat=" + encodeURIComponent(lat) + "&lon=" +  encodeURIComponent(lon);
+    var httpRequest = new XMLHttpRequest();
+
+    console.log(url);
+
+    if (!httpRequest) {
+        alert('Erreur lors de la requête HTTP');
+        return false;
+    }
+
+    httpRequest.onreadystatechange = function(){
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+                var jsonReponse = JSON.parse(httpRequest.responseText);
+                for(i = 0; i < jsonReponse.arceaux.length; i++) {
+                    var marker = makeMarkers(jsonReponse.arceaux[i].la, jsonReponse.arceaux[i].lo);
+                    marker.data = jsonReponse.arceaux[i];
+                    model.addVelo(marker)
+                }
+            } else {
+                alert('Erreur lors de la requête HTTP');
+                return false;
+            }
+        }
+
+    };
+
+    httpRequest.open('GET', url);
+    httpRequest.send();
+}
+
+function renderVeloMarkersView(model){
+    for(i = 0; i < model.velos.length; i++) {
+        model.map.addLayer(model.velos[i]);
+    }
+}
+
 function makeMarkers(lat, lon){
 	latLong = new L.LatLng(lat, lon);
 	marker = new L.Marker(latLong);
@@ -220,9 +298,52 @@ function makeFoodtruckPopup(marker, model){
     marker.bindPopup(popup);
     marker.on("click", function (e) {
         marker.openPopup();
+        bindPopupController(marker, model);
+    })
+}
+
+function makeBixiPopup(marker){
+    var bixiIcon = L.icon({
+        iconUrl: '/js/images/bixi-marker-icon.png',
+        shadowUrl: '/js/images/marker-shadow.png'
     })
 
-    //bindPopupController(marker, model);
+    var popup = "<h4 align=\'center\'>Station Bixi</h4>"
+                + "<dl><dt>Nombre de vélo(s): </dt>"
+                + "<dd>" + marker.data.ba + "</dd>"
+                + "<dt>Nombre de place(s) libre(s): </dt>"
+                + "<dd>" + marker.data.da + "</dd></dl>";
+
+    marker.on("mouseover", function (e) {
+        marker.openPopup();
+    })
+
+    marker.on("mouseout", function (e) {
+        marker.closePopup();
+    })
+
+    marker.bindPopup(popup);
+    marker.setIcon(bixiIcon);
+}
+
+function makeVeloPopup(marker){
+    var veloIcon = L.icon({
+        iconUrl: '/js/images/velo-icon.png',
+        shadowUrl: '/js/images/marker-shadow.png'
+    })
+
+    var popup = "<h4 align=\'center\'>Arceaux de velo</h4>";
+
+    marker.on("mouseover", function (e) {
+        marker.openPopup();
+    })
+
+    marker.on("mouseout", function (e) {
+        marker.closePopup();
+    })
+
+    marker.bindPopup(popup);
+    marker.setIcon(veloIcon);
 }
 
 function bindPopupController(marker, model){
@@ -233,15 +354,15 @@ function bindPopupController(marker, model){
         lon = marker.data.geometry.coordinates[0];
 
         e.preventDefault();
-        removeBixiMarkers();
-        removeVeloMarkers();
+        removeBixiMarkers(model);
+        removeVeloMarkers(model);
         bixi = document.getElementById("bixiCheck");
         arceau = document.getElementById("arceauCheck");
 
         if (bixi.checked)
-            getBixis(lat, lon);
+            getBixis(lat, lon, model);
         if (arceau.checked)
-            getVelos(lat ,lon);
+            getVelos(lat ,lon, model);
     });
 }
 
