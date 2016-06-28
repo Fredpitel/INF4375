@@ -51,11 +51,11 @@ Model.prototype.addFavoriteTrucks = function(liste){
 
 document.addEventListener('DOMContentLoaded', function () {
     var model = new Model();
-    model.subscribers.push(renderFavoriteFoodtruckCollectionView);
+    model.subscribers.push(renderFavoriteFoodtruckListView);
     model.subscribers.push(renderFoodtruckMarkersView);
     model.subscribers.push(renderBixiMarkersView);
     model.subscribers.push(renderVeloMarkersView);
-    getFavoriteTrucks(model)
+    getFavoriteTrucksList(model);
     bindInputDateController(model);
     initMap(model);
 });
@@ -72,7 +72,7 @@ function initMap(model){
     }).addTo(model.map);
 }
 
-function getFavoriteTrucks(model) {
+function getFavoriteTrucksList(model) {
     var url = "http://localhost:8080/" + model.userId + "/favoris";
     var httpRequest = new XMLHttpRequest();
     var favorites = [];
@@ -98,10 +98,10 @@ function getFavoriteTrucks(model) {
     httpRequest.send();
 }
 
-function renderFavoriteFoodtruckCollectionView(model){
+function renderFavoriteFoodtruckListView(model){
     var el = document.getElementById('favoriteTrucks');
-    var html = "<h3>Camions préférés:</h3><br/>";
-    for (i = 0; i < model.favoriteFoodtrucks.length; i++){
+    var html = "<h3>Camions favoris:</h3><br/>";
+    for (var i = 0; i < model.favoriteFoodtrucks.length; i++){
         html += "<li>" + model.favoriteFoodtrucks[i] + "</li><br/>";
     }
     el.innerHTML = html;
@@ -147,24 +147,25 @@ function validateDate(model){
 function getToday(model){
     var today = new Date();
     var dd = today.getDate();
-    var mm = today.getMonth()+1; //January is 0!
+    var mm = today.getMonth() + 1; //January is 0!
     var yyyy = today.getFullYear();
 
-    if(dd<10) {
-        dd='0'+dd
+    if(dd < 10) {
+        dd = '0' + dd
     }
 
-    if(mm<10) {
-        mm='0'+mm
+    if(mm < 10) {
+        mm = '0' + mm
     }
 
-    today = yyyy+'-'+mm+'-'+dd;
+    today = yyyy + '-' + mm + '-' + dd;
     getTrucks(today,today, model);
 }
 
 function getTrucks(firstDate, lastDate, model){
     var url = "http://localhost:8080/horaires-camions?du=" + encodeURIComponent(firstDate) + "&au=" + encodeURIComponent(lastDate);
     var httpRequest = new XMLHttpRequest();
+    var favoris = document.getElementById("favorisCheck");
 
     if (!httpRequest) {
         alert('Erreur lors de la requête HTTP');
@@ -176,11 +177,21 @@ function getTrucks(firstDate, lastDate, model){
             if (httpRequest.status === 200) {
                 var jsonReponse = JSON.parse(httpRequest.responseText);
                 model.removeTrucks();
-                for(i = 0; i < jsonReponse.features.length; i++){
-                    marker = makeMarkers(jsonReponse.features[i].geometry.coordinates[1], jsonReponse.features[i].geometry.coordinates[0]);
-                    marker.data = jsonReponse.features[i];
-                    makeFoodtruckPopup(marker, model);
-                    model.addTrucks(marker);
+                for(var i = 0; i < jsonReponse.features.length; i++){
+                    console.log(jsonReponse.features[i].properties.Camion);
+                    if(favoris.checked){
+                        if((model.favoriteFoodtrucks.indexOf(jsonReponse.features[i].properties.Camion)) !== -1){
+                            marker = makeMarkers(jsonReponse.features[i].geometry.coordinates[1], jsonReponse.features[i].geometry.coordinates[0]);
+                            marker.data = jsonReponse.features[i];
+                            makeFoodtruckPopup(marker, model);
+                            model.addTrucks(marker);
+                        }
+                    } else {
+                        marker = makeMarkers(jsonReponse.features[i].geometry.coordinates[1], jsonReponse.features[i].geometry.coordinates[0]);
+                        marker.data = jsonReponse.features[i];
+                        makeFoodtruckPopup(marker, model);
+                        model.addTrucks(marker);
+                    }
                 }
             } else {
                 alert('Erreur lors de la requête HTTP');
@@ -195,7 +206,7 @@ function getTrucks(firstDate, lastDate, model){
 
 function renderFoodtruckMarkersView(model){
     var nbCamions = 0;
-    for(i = 0; i < model.foodtrucks.length; i++) {
+    for(var i = 0; i < model.foodtrucks.length; i++) {
         model.foodtruckClusters.addLayer(model.foodtrucks[i]);
         model.map.addLayer(model.foodtruckClusters);
         nbCamions++;
@@ -216,7 +227,7 @@ function getBixis(lat, lon, model){
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (httpRequest.status === 200) {
                 var jsonReponse = JSON.parse(httpRequest.responseText);
-                for(i = 0; i < jsonReponse.stations.length; i++) {
+                for(var i = 0; i < jsonReponse.stations.length; i++) {
                     marker = makeMarkers(jsonReponse.stations[i].la, jsonReponse.stations[i].lo);
                     marker.data = jsonReponse.stations[i];
                     makeBixiPopup(marker);
@@ -235,7 +246,7 @@ function getBixis(lat, lon, model){
 }
 
 function renderBixiMarkersView(model){
-    for(i = 0; i < model.bixis.length; i++) {
+    for(var i = 0; i < model.bixis.length; i++) {
         model.map.addLayer(model.bixis[i]);
     }
 }
@@ -253,7 +264,7 @@ function getVelos(lat, lon, model){
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (httpRequest.status === 200) {
                 var jsonReponse = JSON.parse(httpRequest.responseText);
-                for(i = 0; i < jsonReponse.arceaux.length; i++) {
+                for(var i = 0; i < jsonReponse.arceaux.length; i++) {
                     var marker = makeMarkers(jsonReponse.arceaux[i].la, jsonReponse.arceaux[i].lo);
                     marker.data = jsonReponse.arceaux[i];
                     makeVeloPopup(marker);
@@ -272,7 +283,7 @@ function getVelos(lat, lon, model){
 }
 
 function renderVeloMarkersView(model){
-    for(i = 0; i < model.velos.length; i++) {
+    for(var i = 0; i < model.velos.length; i++) {
         model.map.addLayer(model.velos[i]);
     }
 }
@@ -376,7 +387,7 @@ function bindPopupController(marker, model){
 }
 
 function removeMarkers(model){
-    for (i = 0; i < model.foodtrucks.length; i++) {
+    for (var i = 0; i < model.foodtrucks.length; i++) {
         model.map.removeLayer(model.foodtrucks[i]);
     }
     model.map.removeLayer(model.foodtruckClusters);
@@ -388,14 +399,14 @@ function removeMarkers(model){
 }
 
 function removeBixiMarkers(model) {
-	for (i = 0; i < model.bixis.length; i++) {
+	for (var i = 0; i < model.bixis.length; i++) {
 		model.map.removeLayer(model.bixis[i]);
 	}
 	model.bixis = [];
 }
 
 function removeVeloMarkers(model) {
-	for (i = 0; i < model.velos.length; i++) {
+	for (var i = 0; i < model.velos.length; i++) {
 		model.map.removeLayer(model.velos[i]);
 	}
 	model.velos = [];
