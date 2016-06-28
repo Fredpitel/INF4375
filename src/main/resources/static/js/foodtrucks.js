@@ -363,8 +363,8 @@ function bindPopupController(marker, model){
         e.preventDefault();
         lat = marker.data.geometry.coordinates[1];
         lon = marker.data.geometry.coordinates[0];
-        removeBixiMarkers(model);
-        removeVeloMarkers(model);
+        model.removeBixis();
+        model.removeVelos();
         bixi = document.getElementById("bixiCheck");
         arceau = document.getElementById("arceauCheck");
 
