@@ -1,3 +1,54 @@
+function Model(){
+    this.subscribers = [];
+    this.foodtruckClusters = null;
+    this.foodtrucks = [];
+    this.bixis = [];
+    this.velos = [];
+    this.favoriteFoodtrucks = [];
+    this.userId = 1;
+    this.map = null;
+}
+
+Model.prototype.notify = function(index){
+    this.subscribers[index](this);
+}
+
+Model.prototype.addTrucks = function(foodtruck){
+    this.foodtrucks.push(foodtruck);
+    this.notify(1);
+}
+
+Model.prototype.removeTrucks = function(){
+    removeMarkers(this);
+    this.notify(1);
+}
+
+Model.prototype.addBixi = function(bixi){
+    this.bixis.push(bixi);
+    this.notify(2);
+}
+
+Model.prototype.removeBixis = function(){
+    removeBixiMarkers(this);
+    this.notify(2);
+}
+
+Model.prototype.addVelo = function(velo){
+    this.velos.push(velo);
+    this.notify(3);
+}
+
+Model.prototype.removeVelos = function(){
+    removeVeloMarkers(this);
+    this.notify(3);
+}
+
+Model.prototype.addFavoriteTrucks = function(liste){
+    this.favoriteFoodtrucks = liste;
+    this.notify(0);
+}
+
+
 document.addEventListener('DOMContentLoaded', function () {
     var model = new Model();
     model.subscribers.push(renderFavoriteFoodtruckCollectionView);
@@ -8,51 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
     bindInputDateController(model);
     initMap(model);
 });
-
-class Model{
-    constructor() {
-        this.subscribers = [];
-        this.foodtruckClusters = null;
-        this.foodtrucks = [];
-        this.bixis = [];
-        this.velos = [];
-        this.favoriteFoodtrucks = [];
-        this.userId = 1;
-        this.map = null;
-    }
-
-    notify(){
-        this.subscribers.forEach(function (each){
-            each(this);
-        }.bind(this));
-    }
-
-    addTrucks(foodtruck){
-        this.foodtrucks.push(foodtruck);
-        this.notify();
-    }
-
-    removeTrucks(){
-        removeMarkers(this);
-        this.notify();
-    }
-
-    addBixi(bixi){
-        this.bixis.push(bixi);
-        console.log(this.bixis.length);
-        this.notify();
-    }
-
-    addVelo(velo){
-        this.velos.push(velo);
-        this.notify();
-    }
-
-    addFavoriteTrucks(liste){
-        this.favoriteFoodtrucks = liste;
-        this.notify();
-    }
-}
 
 function initMap(model){
     model.foodtruckClusters = new L.MarkerClusterGroup();
@@ -111,6 +117,7 @@ function bindInputDateController(model) {
     });
 
     today.addEventListener('click', function(e) {
+        e.preventDefault();
         getToday(model);
     });
 }
@@ -237,8 +244,6 @@ function getVelos(lat, lon, model){
     var url = "http://localhost:8080/arceaux?lat=" + encodeURIComponent(lat) + "&lon=" +  encodeURIComponent(lon);
     var httpRequest = new XMLHttpRequest();
 
-    console.log(url);
-
     if (!httpRequest) {
         alert('Erreur lors de la requête HTTP');
         return false;
@@ -251,6 +256,7 @@ function getVelos(lat, lon, model){
                 for(i = 0; i < jsonReponse.arceaux.length; i++) {
                     var marker = makeMarkers(jsonReponse.arceaux[i].la, jsonReponse.arceaux[i].lo);
                     marker.data = jsonReponse.arceaux[i];
+                    makeVeloPopup(marker);
                     model.addVelo(marker)
                 }
             } else {
@@ -299,6 +305,10 @@ function makeFoodtruckPopup(marker, model){
     marker.on("click", function (e) {
         marker.openPopup();
         bindPopupController(marker, model);
+    })
+
+    marker.on("close", function (e) {
+        model.subscribers.pop();
     })
 }
 
@@ -350,10 +360,9 @@ function bindPopupController(marker, model){
     bixiVeloButton = document.getElementById("bixiVeloButton");
 
     bixiVeloButton.addEventListener('click', function(e) {
+        e.preventDefault();
         lat = marker.data.geometry.coordinates[1];
         lon = marker.data.geometry.coordinates[0];
-
-        e.preventDefault();
         removeBixiMarkers(model);
         removeVeloMarkers(model);
         bixi = document.getElementById("bixiCheck");
@@ -374,8 +383,8 @@ function removeMarkers(model){
     model.foodtruckClusters = new L.MarkerClusterGroup();
     model.foodtrucks = [];
 
-    removeBixiMarkers(model);
-    removeVeloMarkers(model);
+    model.removeBixis();
+    model.removeVelos();
 }
 
 function removeBixiMarkers(model) {
