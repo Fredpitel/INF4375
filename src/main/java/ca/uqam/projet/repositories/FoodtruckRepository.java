@@ -64,7 +64,11 @@ public class FoodtruckRepository {
             FoodTruckPropertiesSchema properties = new FoodTruckPropertiesSchema();
             FoodTruckCoordSchema coord = new FoodTruckCoordSchema();
 
-            properties.setCamion("" + row.get("camion"));
+            String camion = "" + row.get("camion");
+            if(camion.contains("#039;")){
+                camion.replace("#039;", "'");
+            }
+            properties.setCamion(camion);
             properties.setLieu("" + row.get("lieu"));
             properties.setHeure_debut("" + row.get("heure_debut"));
             properties.setHeure_fin("" + row.get("heure_fin"));

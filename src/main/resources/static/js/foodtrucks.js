@@ -43,8 +43,14 @@ Model.prototype.removeVelos = function(){
     this.notify(3);
 }
 
-Model.prototype.addFavoriteTrucks = function(liste){
-    this.favoriteFoodtrucks = liste;
+Model.prototype.addFavoriteTrucks = function(favorite){
+    this.favoriteFoodtrucks.push(favorite);
+    this.notify(0);
+}
+
+Model.prototype.removeFavoriteTrucks = function(favorite){
+    var index = this.favoriteFoodtrucks.indexOf(favorite);
+    this.favoriteFoodtrucks.splice(index, 1);
     this.notify(0);
 }
 
@@ -86,8 +92,9 @@ function getFavoriteTrucksList(model) {
         if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (httpRequest.status === 200) {
                 var jsonReponse = (JSON.parse(httpRequest.responseText));
-
-                model.addFavoriteTrucks(jsonReponse.favoris);
+                for(var i = 0; i < jsonReponse.favoris.length; i++){
+                    model.addFavoriteTrucks(jsonReponse.favoris[i]);
+                }
             } else {
                 alert('Erreur lors de la requête HTTP');
             }
@@ -178,9 +185,7 @@ function getTrucks(firstDate, lastDate, model){
                 var jsonReponse = JSON.parse(httpRequest.responseText);
                 model.removeTrucks();
                 for(var i = 0; i < jsonReponse.features.length; i++){
-                    if((favoris.checked) && (model.favoriteFoodtrucks.indexOf(jsonReponse.features[i].properties.Camion)) === -1){
-                        //do nothing
-                    } else {
+                    if(((favoris.checked) && (model.favoriteFoodtrucks.indexOf(jsonReponse.features[i].properties.Camion)) !== -1) || !(favoris.checked)){
                         marker = makeMarkers(jsonReponse.features[i].geometry.coordinates[1], jsonReponse.features[i].geometry.coordinates[0]);
                         marker.data = jsonReponse.features[i];
                         makeFoodtruckPopup(marker, model);
@@ -303,8 +308,9 @@ function makeFoodtruckPopup(marker, model){
             + "<input id='bixiCheck' type='checkbox' name='vehicle'> Bixi<br>"
             + "<input id='arceauCheck' type='checkbox' name='vehicle'> Arceau<br><br>"
             + "<div align=\'center\'>"
-            + "<input id='bixiVeloButton' type='button' value='Trouver' align='center'><br>";
-            + "</div>"
+            + "<input id='bixiVeloButton' type='button' value='Trouver' align='center'><br><br>"
+            + "<input id='ajouterFavoris' type='button' value='Ajouter aux favoris' align='center'><br></div>"
+            + "<div id='erreurAjout'></div>"
 
     marker.bindPopup(popup);
     marker.on("click", function (e) {
@@ -362,7 +368,14 @@ function makeVeloPopup(marker){
 }
 
 function bindPopupController(marker, model){
-    bixiVeloButton = document.getElementById("bixiVeloButton");
+    var bixiVeloButton = document.getElementById("bixiVeloButton");
+    var ajouterFavoris = document.getElementById("ajouterFavoris");
+    var favoris = false;
+
+    if(model.favoriteFoodtrucks.indexOf(marker.data.properties.Camion) !== -1){
+        ajouterFavoris.value = "Enlever des favoris";
+        favoris = true;
+    }
 
     bixiVeloButton.addEventListener('click', function(e) {
         e.preventDefault();
@@ -377,6 +390,19 @@ function bindPopupController(marker, model){
             getBixis(lat, lon, model);
         if (arceau.checked)
             getVelos(lat ,lon, model);
+    });
+
+    ajouterFavoris.addEventListener('click', function(e) {
+        e.preventDefault();
+        if(!favoris){
+            model.addFavoriteTrucks(marker.data.properties.Camion);
+            favoris = true;
+            ajouterFavoris.value = "Enlever des favoris";
+        } else {
+            model.removeFavoriteTrucks(marker.data.properties.Camion);
+            favoris = false;
+            ajouterFavoris.value = "Ajouter aux favoris";
+        }
     });
 }
 
