@@ -178,14 +178,8 @@ function getTrucks(firstDate, lastDate, model){
                 var jsonReponse = JSON.parse(httpRequest.responseText);
                 model.removeTrucks();
                 for(var i = 0; i < jsonReponse.features.length; i++){
-                    console.log(jsonReponse.features[i].properties.Camion);
-                    if(favoris.checked){
-                        if((model.favoriteFoodtrucks.indexOf(jsonReponse.features[i].properties.Camion)) !== -1){
-                            marker = makeMarkers(jsonReponse.features[i].geometry.coordinates[1], jsonReponse.features[i].geometry.coordinates[0]);
-                            marker.data = jsonReponse.features[i];
-                            makeFoodtruckPopup(marker, model);
-                            model.addTrucks(marker);
-                        }
+                    if((favoris.checked) && (model.favoriteFoodtrucks.indexOf(jsonReponse.features[i].properties.Camion)) === -1){
+                        //do nothing
                     } else {
                         marker = makeMarkers(jsonReponse.features[i].geometry.coordinates[1], jsonReponse.features[i].geometry.coordinates[0]);
                         marker.data = jsonReponse.features[i];
