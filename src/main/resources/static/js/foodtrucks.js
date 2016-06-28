@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
     model.subscribers.push(renderFoodtruckMarkersView);
     model.subscribers.push(renderBixiMarkersView);
     model.subscribers.push(renderVeloMarkersView);
-    getFavoriteTrucksList(model);
+    getFavoriteTrucks(model);
     bindInputDateController(model);
     initMap(model);
 });
@@ -78,14 +78,13 @@ function initMap(model){
     }).addTo(model.map);
 }
 
-function getFavoriteTrucksList(model) {
+function getFavoriteTrucks(model) {
     var url = "http://localhost:8080/" + model.userId + "/favoris";
     var httpRequest = new XMLHttpRequest();
-    var favorites = [];
 
     if (!httpRequest) {
         alert('Erreur lors de la requête HTTP');
-        return favorites;
+        return;
     }
 
     httpRequest.onreadystatechange = function(){
@@ -102,6 +101,48 @@ function getFavoriteTrucksList(model) {
     };
 
     httpRequest.open('GET', url);
+    httpRequest.send();
+}
+
+function postFavoriteTruck(model, camion){
+    var url = "http://localhost:8080/" + model.userId + "/favoris?camion=" + encodeURIComponent(camion);
+    var httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+        alert('Erreur lors de la requête HTTP');
+        return;
+    }
+
+    httpRequest.onreadystatechange = function(){
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (!httpRequest.status === 201) {
+                alert('Erreur lors de la requête HTTP');
+            }
+        }
+    };
+
+    httpRequest.open('POST', url);
+    httpRequest.send();
+}
+
+function deleteFavoriteTruck(model, camion){
+    var url = "http://localhost:8080/" + model.userId + "/favoris?camion=" + encodeURIComponent(camion);
+    var httpRequest = new XMLHttpRequest();
+
+    if (!httpRequest) {
+        alert('Erreur lors de la requête HTTP');
+        return;
+    }
+
+    httpRequest.onreadystatechange = function(){
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (!httpRequest.status === 201) {
+                alert('Erreur lors de la requête HTTP');
+            }
+        }
+    };
+
+    httpRequest.open('DELETE', url);
     httpRequest.send();
 }
 
@@ -395,13 +436,15 @@ function bindPopupController(marker, model){
     ajouterFavoris.addEventListener('click', function(e) {
         e.preventDefault();
         if(!favoris){
-            model.addFavoriteTrucks(marker.data.properties.Camion);
             favoris = true;
+            model.addFavoriteTrucks(marker.data.properties.Camion);
             ajouterFavoris.value = "Enlever des favoris";
+            postFavoriteTruck(model, marker.data.properties.Camion);
         } else {
-            model.removeFavoriteTrucks(marker.data.properties.Camion);
             favoris = false;
+            model.removeFavoriteTrucks(marker.data.properties.Camion);
             ajouterFavoris.value = "Ajouter aux favoris";
+            deleteFavoriteTruck(model, marker.data.properties.Camion);
         }
     });
 }

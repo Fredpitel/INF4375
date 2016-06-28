@@ -11,10 +11,7 @@ import ca.uqam.projet.schema.StationsSchema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -47,10 +44,22 @@ public class ApplicationController {
         }
     }
 
-    @RequestMapping("/{userId}/favoris")
+    @RequestMapping(path = "/{userId}/favoris", method = RequestMethod.GET)
     public @ResponseBody
-    ListeFavorisSchema favoris(@PathVariable String userId) {
+        ListeFavorisSchema getFavoris(@PathVariable String userId) {
         return listeFavorisRepository.selectFavoritesByUserID(userId);
+    }
+
+    @RequestMapping(path = "/{userId}/favoris", method = RequestMethod.POST)
+    public @ResponseBody
+        void postFavoris(@PathVariable String userId, @RequestParam("camion") String camion) {
+        listeFavorisRepository.insertFavoriteByUserID(userId, camion);
+    }
+
+    @RequestMapping(path = "/{userId}/favoris", method = RequestMethod.DELETE)
+    public @ResponseBody
+        void deleteFavoris(@PathVariable String userId, @RequestParam("camion") String camion) {
+        listeFavorisRepository.deleteFavoriteByUserID(userId, camion);
     }
 
     @RequestMapping("/bixis")

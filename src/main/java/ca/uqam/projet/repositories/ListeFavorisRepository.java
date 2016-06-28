@@ -26,6 +26,16 @@ public class ListeFavorisRepository {
         return favoris;
     }
 
+    public void insertFavoriteByUserID(String userId, String camion) {
+        jdbcTemplate.execute("INSERT INTO listefavoris VALUES (DEFAULT, " + userId + ", '" + camion +"');");
+    }
+
+    public void deleteFavoriteByUserID(String userId, String camion) {
+        jdbcTemplate.execute("DELETE FROM listefavoris WHERE idusager = " + userId + " AND camion = '" + camion +"';");
+    }
+
+
+
     public ListeFavorisSchema makeJavaObject(List<Map<String, Object>> rows){
         ListeFavorisSchema favoris = new ListeFavorisSchema();
         ArrayList<String> liste = new ArrayList();
