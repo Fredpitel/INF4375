@@ -27,11 +27,12 @@ public class ListeFavorisRepository {
     }
 
     public void insertFavoriteByUserID(String userId, String camion) {
-        jdbcTemplate.execute("INSERT INTO listefavoris VALUES (DEFAULT, " + userId + ", '" + camion +"');");
+        jdbcTemplate.execute("INSERT INTO listefavoris VALUES (DEFAULT, " + userId + ", '" + camion.replace("'", "''") + "');");
+        System.out.println(userId + " " + camion);
     }
 
     public void deleteFavoriteByUserID(String userId, String camion) {
-        jdbcTemplate.execute("DELETE FROM listefavoris WHERE idusager = " + userId + " AND camion = '" + camion +"';");
+        jdbcTemplate.execute("DELETE FROM listefavoris WHERE idusager = " + userId + " AND camion = '" + camion.replace("'", "''") +"';");
     }
 
 

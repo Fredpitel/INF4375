@@ -450,10 +450,10 @@ function bindPopupController(marker, model){
 }
 
 function removeMarkers(model){
+    model.map.removeLayer(model.foodtruckClusters);
     for (var i = 0; i < model.foodtrucks.length; i++) {
         model.map.removeLayer(model.foodtrucks[i]);
     }
-    model.map.removeLayer(model.foodtruckClusters);
     model.foodtruckClusters = new L.MarkerClusterGroup();
     model.foodtrucks = [];
 
