@@ -31,8 +31,7 @@ public class FoodTruckPropertiesSchema {
         return heure_debut;
     }
 
-    public void setHeure_debut(String Heure_debut) {
-        heure_debut = Heure_debut;
+    public void setHeure_debut(String Heure_debut) { heure_debut = Heure_debut;
     }
 
     public String getHeure_fin() {
@@ -55,9 +54,7 @@ public class FoodTruckPropertiesSchema {
         return camion;
     }
 
-    public void setCamion(String Camion) {
-        camion = Camion;
-    }
+    public void setCamion(String Camion) { camion = Camion; }
 
     @Override
     public String toString() {

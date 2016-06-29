@@ -31,8 +31,8 @@ public class FoodtruckRepository {
 
         return jdbcTemplate.update(conn -> {
             PreparedStatement ps = conn.prepareStatement(INSERT_STMT);
-            ps.setString(1, propreties.getCamion());
-            ps.setString(2, propreties.getLieu());
+            ps.setString(1, propreties.getCamion().replace("&#039;", "'").replace("&lt;", "<").replace("&gt;", ">").replace("&amp;","&"));
+            ps.setString(2, propreties.getLieu().replace("&#039;", "'"));
             ps.setString(3, propreties.getHeure_debut());
             ps.setString(4, propreties.getHeure_fin());
             ps.setString(5, propreties.getDate());
@@ -64,11 +64,7 @@ public class FoodtruckRepository {
             FoodTruckPropertiesSchema properties = new FoodTruckPropertiesSchema();
             FoodTruckCoordSchema coord = new FoodTruckCoordSchema();
 
-            String camion = "" + row.get("camion");
-            if(camion.contains("#039;")){
-                camion.replace("#039;", "'");
-            }
-            properties.setCamion(camion);
+            properties.setCamion("" + row.get("camion"));
             properties.setLieu("" + row.get("lieu"));
             properties.setHeure_debut("" + row.get("heure_debut"));
             properties.setHeure_fin("" + row.get("heure_fin"));
