@@ -5,9 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Frederic.Pitel on 23/6/16.
@@ -16,37 +15,47 @@ import java.util.Map;
 @Component
 public class ListeFavorisRepository {
 
+    private static final String SELECT_STMT =
+            "select camion from listefavoris where idusager = ?;";
+
+    private static final String INSERT_STMT =
+            " insert into listefavoris (idusager, camion)"
+                    + " values (?, ?)"
+                    + " on conflict do nothing"
+            ;
+
+    private static final String DELETE_STMT =
+            " delete from listefavoris"
+                    + " where idusager = ? and camion = ?"
+            ;
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     public ListeFavorisSchema selectFavoritesByUserID(String userId) {
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT camion FROM listefavoris WHERE idusager = " + userId + ";");
-        ListeFavorisSchema favoris = makeJavaObject(rows);
+        List<String> liste = jdbcTemplate.query(SELECT_STMT, ps ->
+                ps.setInt(1, Integer.parseInt(userId)), (rs, rowNum) ->
+                rs.getString("camion")
+        );
 
-        return favoris;
+        return new ListeFavorisSchema(liste);
     }
 
     public void insertFavoriteByUserID(String userId, String camion) {
-        jdbcTemplate.execute("INSERT INTO listefavoris VALUES (DEFAULT, " + userId + ", '" + camion.replace("'", "''") + "');");
+        jdbcTemplate.update(conn -> {
+            PreparedStatement ps = conn.prepareStatement(INSERT_STMT);
+            ps.setInt(1, Integer.parseInt(userId));
+            ps.setString(2, camion);
+            return ps;
+        });
     }
 
-    public void deleteFavoriteByUserID(String userId, String camion) {
-        jdbcTemplate.execute("DELETE FROM listefavoris WHERE idusager = " + userId + " AND camion = '" + camion.replace("'", "''") +"';");
+    public int deleteFavoriteByUserID(String userId, String camion) {
+        return jdbcTemplate.update(conn -> {
+            PreparedStatement ps = conn.prepareStatement(DELETE_STMT);
+            ps.setInt(1, Integer.parseInt(userId));
+            ps.setString(2, camion);
+            return ps;
+        });
     }
-
-
-
-    public ListeFavorisSchema makeJavaObject(List<Map<String, Object>> rows){
-        ListeFavorisSchema favoris = new ListeFavorisSchema();
-        ArrayList<String> liste = new ArrayList();
-
-        for(Map<String, Object> row : rows){
-            liste.add("" + row.get("camion"));
-        }
-
-        favoris.setFavoris(liste);
-
-        return  favoris;
-    }
-
 }

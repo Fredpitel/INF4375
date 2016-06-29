@@ -13,6 +13,11 @@ public class FeaturesCollectionSchema {
     public FeaturesCollectionSchema(){
     }
 
+    public FeaturesCollectionSchema(FoodTruckPropertiesSchema properties, FoodTruckCoordSchema geometry){
+        this.geometry = geometry;
+        this.properties = properties;
+    }
+
     public FoodTruckCoordSchema getGeometry() {
         return geometry;
     }

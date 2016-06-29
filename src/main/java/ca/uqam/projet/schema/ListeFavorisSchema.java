@@ -1,26 +1,27 @@
 package ca.uqam.projet.schema;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Frederic.Pitel on 23/6/16.
  */
 
 public class ListeFavorisSchema {
-    private ArrayList<String> favoris;
+    private List<String> favoris;
 
-    public ListeFavorisSchema(ArrayList<String> favoris) {
+    public ListeFavorisSchema(List<String> favoris) {
         this.favoris = favoris;
     }
 
     public ListeFavorisSchema() {
     }
 
-    public ArrayList<String> getFavoris() {
+    public List<String> getFavoris() {
         return favoris;
     }
 
-    public void setFavoris(ArrayList<String> favoris) {
+    public void setFavoris(List<String> favoris) {
         this.favoris = favoris;
     }
 

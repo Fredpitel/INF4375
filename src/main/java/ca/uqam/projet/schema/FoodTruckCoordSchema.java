@@ -12,6 +12,10 @@ public class FoodTruckCoordSchema {
     public FoodTruckCoordSchema(){
     }
 
+    public FoodTruckCoordSchema(double lat, double lon){
+        this.coordinates = new double[]{lon, lat};
+    }
+
     public double[] getCoordinates() {
         return coordinates;
     }

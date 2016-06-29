@@ -23,6 +23,13 @@ public class BixiRepository {
                     + " on conflict do nothing"
             ;
 
+    private static final String SELECTALL_STMT =
+            "SELECT nbBikes, nbEmptyDocks, ST_X(coord) AS lon, ST_Y(coord) AS lat FROM bixi;";
+
+    private static final String SELECT_STMT =
+            "SELECT nbBikes, nbEmptyDocks, ST_X(coord) AS lon, ST_Y(coord) AS lat FROM bixi "
+                    + "WHERE st_distance_sphere(coord, ST_MakePoint(?, ?, 4326)) <= 200;";
+
     public void truncate(){
         jdbcTemplate.execute("ALTER SEQUENCE bixi_idbixi_seq RESTART WITH 1");
         jdbcTemplate.execute("TRUNCATE TABLE bixi;");
@@ -39,38 +46,21 @@ public class BixiRepository {
     }
 
     public StationsSchema findAll(){
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM bixi;");
-        return makeJavaObject(rows);
+        List<BixiSchema> stations = jdbcTemplate.query(SELECTALL_STMT,(rs, rowNum) ->
+                new BixiSchema(rs.getInt("nbBikes"), rs.getInt("nbEmptyDocks"), Double.parseDouble(rs.getString("lat")), Double.parseDouble(rs.getString("lon")))
+        );
+
+        return new StationsSchema(stations);
     }
 
     public StationsSchema selectByCoord(double lat, double lon){
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM bixi WHERE st_distance_sphere(coord, ST_MakePoint(" + lon + ", " + lat + ", 4326)) <= 200;");
-        return makeJavaObject(rows);
-    }
+        List<BixiSchema> stations = jdbcTemplate.query(SELECT_STMT, ps -> {
+                    ps.setDouble(1, lon);
+                    ps.setDouble(2, lat);
+                }, (rs, rowNum) ->
+                        new BixiSchema(rs.getInt("nbBikes"), rs.getInt("nbEmptyDocks"), Double.parseDouble(rs.getString("lat")), Double.parseDouble(rs.getString("lon")))
+        );
 
-    private StationsSchema makeJavaObject(List<Map<String, Object>> rows){
-        StationsSchema stations = new StationsSchema();
-        ArrayList<BixiSchema> bixis = new ArrayList<BixiSchema>();
-
-        for(Map<String, Object> row : rows) {
-            BixiSchema bixi = new BixiSchema();
-            bixi.setBa((int)row.get("nbBikes"));
-            bixi.setDa((int)row.get("nbEmptyDocks"));
-
-            Map<String, Object> geometry = jdbcTemplate.queryForMap("SELECT ST_X(coord), ST_Y(coord) FROM bixi WHERE idBixi = " + row.get("idBixi") + ";");
-
-            double[] coordDouble = new double[2];
-            coordDouble[0] = Double.parseDouble("" + geometry.get("st_x"));
-            coordDouble[1] = Double.parseDouble("" + geometry.get("st_y"));
-
-            bixi.setLo(coordDouble[0]);
-            bixi.setLa(coordDouble[1]);
-
-            bixis.add(bixi);
-        }
-
-        stations.setStations(bixis);
-
-        return stations;
+        return new StationsSchema(stations);
     }
 }

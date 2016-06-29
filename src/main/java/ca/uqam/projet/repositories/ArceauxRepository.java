@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class ArceauxRepository {
@@ -20,6 +19,13 @@ public class ArceauxRepository {
                     + " values (ST_GeomFromText(?, 4326))"
                     + " on conflict do nothing"
             ;
+
+    private static final String SELECTALL_STMT =
+            "SELECT ST_X(coord) AS lon, ST_Y(coord) AS lat FROM arceau;";
+
+    private static final String SELECT_STMT =
+            "SELECT ST_X(coord) AS lon, ST_Y(coord) AS lat FROM arceau "
+                    + "WHERE st_distance_sphere(coord, ST_MakePoint(?, ?, 4326)) <= 200;";
 
     public void truncate(){
         jdbcTemplate.execute("ALTER SEQUENCE arceau_idarceau_seq RESTART WITH 1");
@@ -35,28 +41,21 @@ public class ArceauxRepository {
     }
 
     public CollectionArceauxSchema findAll(){
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM arceau;");
-        return makeJavaObject(rows);
+        List<ArceauxSchema> liste = jdbcTemplate.query(SELECTALL_STMT,(rs, rowNum) ->
+            new ArceauxSchema(Double.parseDouble(rs.getString("lat")), Double.parseDouble(rs.getString("lon")))
+        );
+
+        return new CollectionArceauxSchema(liste);
     }
 
     public CollectionArceauxSchema selectByCoord(double lat, double lon){
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM arceau WHERE st_distance_sphere(coord, ST_MakePoint(" + lon + ", " + lat + ", 4326)) <= 200;");
-        return makeJavaObject(rows);
-    }
+        List<ArceauxSchema> liste = jdbcTemplate.query(SELECT_STMT, ps -> {
+            ps.setDouble(1, lon);
+            ps.setDouble(2, lat);
+            }, (rs, rowNum) ->
+            new ArceauxSchema(Double.parseDouble(rs.getString("lat")), Double.parseDouble(rs.getString("lon")))
+        );
 
-    private CollectionArceauxSchema makeJavaObject(List<Map<String, Object>> rows){
-        CollectionArceauxSchema arceaux = new CollectionArceauxSchema();
-
-        for(Map<String, Object> row : rows) {
-            Map<String, Object> geometry = jdbcTemplate.queryForMap("SELECT ST_X(coord), ST_Y(coord) FROM arceau WHERE idArceau = " + row.get("idArceau") + ";");
-
-            double[] coordDouble = new double[2];
-            coordDouble[0] = Double.parseDouble("" + geometry.get("st_x"));
-            coordDouble[1] = Double.parseDouble("" + geometry.get("st_y"));
-
-            arceaux.addArceau(new ArceauxSchema(coordDouble[1],coordDouble[0]));
-        }
-
-        return arceaux;
+        return new CollectionArceauxSchema(liste);
     }
 }

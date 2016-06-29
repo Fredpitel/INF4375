@@ -25,7 +25,7 @@ public class FetchArceauxTask {
     @Autowired
     private ArceauxRepository repository;
 
-    @Scheduled(cron="0/5 * * * * ?")
+    @Scheduled(cron="0 0 0 1 * ?")
     public void execute() {
         RestTemplate restTemplate = new RestTemplate();
         try {

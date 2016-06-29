@@ -3,26 +3,27 @@ package ca.uqam.projet.schema;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by deasel on 2016-05-19.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CuisineDeRueSchema {
-    private ArrayList<FeaturesCollectionSchema> features;
+    private List<FeaturesCollectionSchema> features;
 
-    public  CuisineDeRueSchema(){
+    public CuisineDeRueSchema(){
     }
 
-    public CuisineDeRueSchema(ArrayList<FeaturesCollectionSchema> features) {
+    public CuisineDeRueSchema(List<FeaturesCollectionSchema> features) {
         this.features = features;
     }
 
-    public ArrayList<FeaturesCollectionSchema> getFeatures() {
+    public List<FeaturesCollectionSchema> getFeatures() {
         return features;
     }
 
-    public void setFeatures(ArrayList<FeaturesCollectionSchema> features) {
+    public void setFeatures(List<FeaturesCollectionSchema> features) {
         this.features = features;
     }
 

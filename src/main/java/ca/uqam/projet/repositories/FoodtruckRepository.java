@@ -5,7 +5,6 @@ import java.sql.*;
 
 import ca.uqam.projet.schema.*;
 
-import org.postgresql.jdbc4.Jdbc4Array;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.jdbc.core.*;
 import org.springframework.stereotype.*;
@@ -20,6 +19,13 @@ public class FoodtruckRepository {
                     + " values (?, ?, ?, ?, ?, ST_GeomFromText(?, 4326))"
                     + " on conflict do nothing"
             ;
+
+    private static final String SELECT_STMT =
+            "SELECT camion, lieu, heure_debut, heure_fin, jour, ST_X(coord) AS lon, ST_Y(coord) AS lat FROM foodtruck"
+                    + " WHERE jour >= ? AND jour <= ?;";
+
+    private static final String SELECTALL_STMT =
+            "SELECT camion, lieu, heure_debut, heure_fin, jour, ST_X(coord) AS lon, ST_Y(coord) AS lat FROM foodtruck;";
 
     public void truncate(){
         jdbcTemplate.execute("ALTER SEQUENCE foodtruck_idfoodtruck_seq RESTART WITH 1");
@@ -41,50 +47,26 @@ public class FoodtruckRepository {
         });
     }
 
-    public CuisineDeRueSchema findAll(){
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM foodtruck;");
-        CuisineDeRueSchema cuisine = makeJavaObject(rows);
+    public CuisineDeRueSchema findAll() {
+        List<FeaturesCollectionSchema> features = jdbcTemplate.query(SELECTALL_STMT, (rs, rowNum) ->
+                new FeaturesCollectionSchema(
+                        new FoodTruckPropertiesSchema(rs.getString("camion"), rs.getString("lieu"), rs.getString("heure_debut"), rs.getString("heure_fin"), rs.getString("jour")),
+                        new FoodTruckCoordSchema(Double.parseDouble(rs.getString("lat")), Double.parseDouble(rs.getString("lon"))))
+        );
 
-        return cuisine;
+        return new CuisineDeRueSchema(features);
     }
 
-    public CuisineDeRueSchema selectByDate(String firstDate, String lastDate){
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("SELECT * FROM foodtruck WHERE (jour >= '" + firstDate + "' AND jour <= '" + lastDate + "') ORDER BY jour;");
-        CuisineDeRueSchema cuisine = makeJavaObject(rows);
+    public CuisineDeRueSchema selectByDate(String firstDate, String lastDate) {
+        List<FeaturesCollectionSchema> features = jdbcTemplate.query(SELECT_STMT, ps -> {
+                    ps.setString(1, firstDate);
+                    ps.setString(2, lastDate);
+                },(rs, rowNum) ->
+                new FeaturesCollectionSchema(
+                        new FoodTruckPropertiesSchema(rs.getString("camion"), rs.getString("lieu"), rs.getString("heure_debut"), rs.getString("heure_fin"), rs.getString("jour")),
+                        new FoodTruckCoordSchema(Double.parseDouble(rs.getString("lat")), Double.parseDouble(rs.getString("lon"))))
+        );
 
-        return cuisine;
-    }
-
-    private CuisineDeRueSchema makeJavaObject(List<Map<String, Object>> rows){
-        CuisineDeRueSchema cuisine = new CuisineDeRueSchema();
-        ArrayList<FeaturesCollectionSchema> foodtrucks = new ArrayList<FeaturesCollectionSchema>();
-
-        for(Map<String, Object> row : rows) {
-            FeaturesCollectionSchema foodtruck = new FeaturesCollectionSchema();
-            FoodTruckPropertiesSchema properties = new FoodTruckPropertiesSchema();
-            FoodTruckCoordSchema coord = new FoodTruckCoordSchema();
-
-            properties.setCamion("" + row.get("camion"));
-            properties.setLieu("" + row.get("lieu"));
-            properties.setHeure_debut("" + row.get("heure_debut"));
-            properties.setHeure_fin("" + row.get("heure_fin"));
-            properties.setDate("" + row.get("jour"));
-
-            foodtruck.setProperties(properties);
-
-            Map<String, Object> geometry = jdbcTemplate.queryForMap("SELECT ST_X(coord), ST_Y(coord) FROM foodtruck WHERE idFoodtruck = " + row.get("idFoodtruck") + ";");
-
-            double[] coordDouble = new double[2];
-            coordDouble[0] = Double.parseDouble("" + geometry.get("st_x"));
-            coordDouble[1] = Double.parseDouble("" + geometry.get("st_y"));
-
-            coord.setCoordinates(coordDouble);
-            foodtruck.setGeometry(coord);
-            foodtrucks.add(foodtruck);
-        }
-
-        cuisine.setFeatures(foodtrucks);
-
-        return cuisine;
+        return new CuisineDeRueSchema(features);
     }
 }

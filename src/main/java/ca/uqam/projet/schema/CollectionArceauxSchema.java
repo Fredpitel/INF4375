@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by deasel on 2016-06-13.
@@ -13,12 +14,15 @@ import java.util.Iterator;
 public class CollectionArceauxSchema {
 
     public CollectionArceauxSchema(){
-        arceaux=new ArrayList<>();
     }
 
-    private ArrayList<ArceauxSchema> arceaux;  
+    public CollectionArceauxSchema(List<ArceauxSchema> arceaux){
+        this.arceaux = arceaux;
+    }
+
+    private List<ArceauxSchema> arceaux;
     
-    public ArrayList<ArceauxSchema> getArceaux() {
+    public List<ArceauxSchema> getArceaux() {
         return arceaux;
     }
 
@@ -26,7 +30,7 @@ public class CollectionArceauxSchema {
         arceaux.add(arceau);
     }
 
-    public void setArceaux(ArrayList<ArceauxSchema> arceaux) {
+    public void setArceaux(List<ArceauxSchema> arceaux) {
         this.arceaux = arceaux;
     }
 

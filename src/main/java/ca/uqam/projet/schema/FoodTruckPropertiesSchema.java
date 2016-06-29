@@ -19,6 +19,14 @@ public class FoodTruckPropertiesSchema {
     @JsonProperty("Camion")
     private String camion;
 
+    public FoodTruckPropertiesSchema(String camion, String lieu, String heure_debut, String heure_fin, String date){
+        this.camion = camion;
+        this.lieu = lieu;
+        this.heure_debut = heure_debut;
+        this.heure_fin = heure_fin;
+        this.date = date;
+    }
+
     public String getDate() {
         return date;
     }

@@ -16,6 +16,13 @@ public class BixiSchema {
     public BixiSchema(){
     }
 
+    public  BixiSchema(int nbBikes, int nbEmptyDocks, double lat, double lon){
+        ba = nbBikes;
+        da = nbEmptyDocks;
+        la = lat;
+        lo = lon;
+    }
+
     public void setLa(double la) {
         this.la = la;
     }

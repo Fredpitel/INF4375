@@ -3,6 +3,7 @@ package ca.uqam.projet.schema;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by deasel on 2016-05-19.
@@ -11,16 +12,20 @@ import java.util.ArrayList;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StationsSchema {
 
-    private ArrayList<BixiSchema> stations;
+    private List<BixiSchema> stations;
 
     public StationsSchema(){
     }
 
-    public ArrayList<BixiSchema> getStations(){
+    public StationsSchema(List<BixiSchema> stations){
+        this.stations = stations;
+    }
+
+    public List<BixiSchema> getStations(){
         return stations;
     }
 
-    public void setStations(ArrayList<BixiSchema> stations) {
+    public void setStations(List<BixiSchema> stations) {
         this.stations = stations;
     }
 
