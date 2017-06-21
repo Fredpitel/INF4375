@@ -11,6 +11,7 @@ import java.util.List;
 
 @Component
 public class ArceauxRepository {
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

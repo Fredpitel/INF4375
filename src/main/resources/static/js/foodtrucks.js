@@ -67,7 +67,10 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function initMap(model){
-    model.foodtruckClusters = new L.MarkerClusterGroup();
+    model.foodtruckClusters = new L.MarkerClusterGroup({
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: false,
+    });
 
     model.map = L.map('mapid').setView([45.52, -73.66], 12);
 
@@ -245,13 +248,11 @@ function getTrucks(firstDate, lastDate, model){
 }
 
 function renderFoodtruckMarkersView(model){
-    var nbCamions = 0;
     for(var i = 0; i < model.foodtrucks.length; i++) {
         model.foodtruckClusters.addLayer(model.foodtrucks[i]);
         model.map.addLayer(model.foodtruckClusters);
-        nbCamions++;
     }
-    document.getElementById("nbCamions").innerHTML = "Nombre d'horaires de camions trouvés: " + nbCamions;
+    document.getElementById("nbCamions").innerHTML = "Nombre d'horaires de camions trouvés: " + model.foodtrucks.length;
 }
 
 function getBixis(lat, lon, model){
@@ -454,7 +455,16 @@ function removeMarkers(model){
     for (var i = 0; i < model.foodtrucks.length; i++) {
         model.map.removeLayer(model.foodtrucks[i]);
     }
-    model.foodtruckClusters = new L.MarkerClusterGroup();
+    model.foodtruckClusters = new L.MarkerClusterGroup({
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: false,
+        disableClusteringAtZoom: 25
+    });
+
+    model.foodtruckClusters.on('clusterclick', function(e){
+        e.layer.spiderfy();
+    })
+
     model.foodtrucks = [];
 
     model.removeBixis();
